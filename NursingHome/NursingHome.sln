@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NursingHome.UI", "NursingHome.UI\NursingHome.UI.csproj", "{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {956FC24D-ADDF-441C-B267-08302B7B7B41}
+	EndGlobalSection
+EndGlobal
