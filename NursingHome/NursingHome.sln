@@ -5,6 +5,10 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NursingHome.UI", "NursingHome.UI\NursingHome.UI.csproj", "{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NursingHome.DAL", "NursingHome.DLL\NursingHome.DAL.csproj", "{AA2B9AB7-C7B0-4FAB-82BE-62F76E84A865}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NursingHome.BLL", "NursingHome.BLL\NursingHome.BLL.csproj", "{4ADCFA26-4EAF-4CB8-8F14-9D8DC47E9F11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08249580-5F4D-4F3F-BE89-2A0FF4A89B45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA2B9AB7-C7B0-4FAB-82BE-62F76E84A865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA2B9AB7-C7B0-4FAB-82BE-62F76E84A865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA2B9AB7-C7B0-4FAB-82BE-62F76E84A865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA2B9AB7-C7B0-4FAB-82BE-62F76E84A865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ADCFA26-4EAF-4CB8-8F14-9D8DC47E9F11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ADCFA26-4EAF-4CB8-8F14-9D8DC47E9F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ADCFA26-4EAF-4CB8-8F14-9D8DC47E9F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ADCFA26-4EAF-4CB8-8F14-9D8DC47E9F11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
