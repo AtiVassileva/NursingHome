@@ -15,4 +15,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NursingHome.DLL\NursingHome.DAL.csproj" />
+  </ItemGroup>
+
 </Project>
