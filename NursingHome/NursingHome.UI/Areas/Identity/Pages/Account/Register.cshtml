@@ -1,0 +1,59 @@
+﻿@page 
+@model RegisterModel
+
+<h1>Регистрация</h1>
+
+<form asp-route-returnUrl="/" method="post">
+    <div class="form-group">
+        <label>Тип потребител:</label><br />
+        @foreach (var role in Model.Roles)
+        {
+            <input type="radio" name="Input.UserRoleId" asp-for="Input.UserRoleId" value="@role.Value" id="@role.Value" checked="@(role.Text == "Employee")" />
+            <label for="@role.Value">@(role.Text == RegularUserRoleName ? "Потребител" : "Служител")</label>
+        }
+        <br />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.FirstName"></label>
+        <input asp-for="Input.FirstName" class="form-control" />
+        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.MiddleName"></label>e
+        <input asp-for="Input.MiddleName" class="form-control" />
+        <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.LastName"></label>
+        <input asp-for="Input.LastName" class="form-control" />
+        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Email"></label>
+        <input asp-for="Input.Email" class="form-control" />
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Password"></label>
+        <input asp-for="Input.Password" class="form-control" />
+        <span asp-validation-for="Input.Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.ConfirmPassword"></label>
+        <input asp-for="Input.ConfirmPassword" class="form-control" />
+        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Регистрирай се</button>
+</form>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
