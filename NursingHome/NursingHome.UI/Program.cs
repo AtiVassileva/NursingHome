@@ -5,6 +5,7 @@ using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.MappingConfiguration;
+using NursingHome.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
-builder.Services.AddTransient<UserService>();
+
+builder.RegisterServicesCollection();
 
 var app = builder.Build();
 

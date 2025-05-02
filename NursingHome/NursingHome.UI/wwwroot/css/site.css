@@ -33,3 +33,7 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
 }
+
+.action-icon {
+    margin-right: 10px;
+}

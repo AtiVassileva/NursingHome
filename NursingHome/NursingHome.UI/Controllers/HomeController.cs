@@ -1,26 +1,25 @@
 using Microsoft.AspNetCore.Mvc;
 using NursingHome.UI.Models;
 using System.Diagnostics;
+using NursingHome.BLL;
 
 namespace NursingHome.UI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly UserService _userService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(UserService userService)
         {
-            _logger = logger;
+            _userService = userService;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> UserAccounts()
         {
-            return View();
+            var users = await _userService.GetAllUsers();
+            return View(users);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NursingHome.BLL;
 using NursingHome.DAL;
 using NursingHome.DAL.Common;
 using NursingHome.DAL.Models;
+using NursingHome.UI.Services;
 
 namespace NursingHome.UI.Infrastructure
 {
@@ -11,6 +13,13 @@ namespace NursingHome.UI.Infrastructure
 
     public static class ApplicationBuilderExtensions
     {
+        public static void RegisterServicesCollection(this WebApplicationBuilder builder)
+        {
+            builder.Services
+                .AddTransient<UserService>()
+                .AddTransient<UserUiService>();
+        }
+
         public static async Task<IApplicationBuilder> PrepareDatabase(this IApplicationBuilder app)
         {
             using var scopedServices = app.ApplicationServices.CreateScope();

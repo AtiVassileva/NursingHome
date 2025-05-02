@@ -13,6 +13,11 @@ namespace NursingHome.BLL
             _dbContext = dbContext;
         }
 
+        public async Task<List<ApplicationUser>> GetAllUsers()
+        {
+            return await _dbContext.Users.ToListAsync();
+        }
+
         public async Task<List<ApplicationUser>> GetUsersWithEmployeeInfo(IEnumerable<ApplicationUser> employees)
         {
             var employeeIds = employees.Select(e => e.Id).ToList();
