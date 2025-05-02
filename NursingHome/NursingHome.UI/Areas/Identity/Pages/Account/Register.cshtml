@@ -1,4 +1,5 @@
-﻿@page 
+﻿@page
+
 @model RegisterModel
 
 <h1>Регистрация</h1>
@@ -8,52 +9,219 @@
         <label>Тип потребител:</label><br />
         @foreach (var role in Model.Roles)
         {
-            <input type="radio" name="Input.UserRoleId" asp-for="Input.UserRoleId" value="@role.Value" id="@role.Value" checked="@(role.Text == "Employee")" />
-            <label for="@role.Value">@(role.Text == RegularUserRoleName ? "Потребител" : "Служител")</label>
+            <input type="radio"
+                   name="Input.UserRoleId"
+                   asp-for="Input.UserRoleId"
+                   value="@role.Value"
+                   id="@role.Value"
+                   data-name="@role.Text"
+                   onchange="toggleRoleForms()"
+                   checked="checked" />
+            <label for="@role.Text">@role.Text</label>
         }
         <br />
     </div>
 
-    <div class="form-group">
-        <label asp-for="Input.FirstName"></label>
-        <input asp-for="Input.FirstName" class="form-control" />
-        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-    </div>
+    <fieldset id="personalDataForm">
+        <legend>Лични данни</legend>
 
-    <div class="form-group">
-        <label asp-for="Input.MiddleName"></label>e
-        <input asp-for="Input.MiddleName" class="form-control" />
-        <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Input.FirstName"></label>
+            <input asp-for="Input.FirstName" class="form-control" />
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Input.LastName"></label>
-        <input asp-for="Input.LastName" class="form-control" />
-        <span asp-validation-for="Input.LastName" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Input.MiddleName"></label>
+            <input asp-for="Input.MiddleName" class="form-control" />
+            <span asp-validation-for="Input.MiddleName" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Input.Email"></label>
-        <input asp-for="Input.Email" class="form-control" />
-        <span asp-validation-for="Input.Email" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Input.LastName"></label>
+            <input asp-for="Input.LastName" class="form-control" />
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Input.Password"></label>
-        <input asp-for="Input.Password" class="form-control" />
-        <span asp-validation-for="Input.Password" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" class="form-control" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Input.ConfirmPassword"></label>
-        <input asp-for="Input.ConfirmPassword" class="form-control" />
-        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" class="form-control" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Регистрирай се</button>
+        <div class="form-group">
+            <label asp-for="Input.ConfirmPassword"></label>
+            <input asp-for="Input.ConfirmPassword" class="form-control" />
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+        </div>
+    </fieldset>
+
+    <br />
+    <fieldset id="residentForm" style="display: none">
+        <legend>Информация за потребителя</legend>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.DateOfBirth"></label>
+            <input asp-for="Input.ResidentInfo.DateOfBirth" class="form-control" type="date"/>
+            <span asp-validation-for="Input.ResidentInfo.DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.DateAdmitted"></label>
+            <input asp-for="Input.ResidentInfo.DateAdmitted" class="form-control" type="date" />
+            <span asp-validation-for="Input.ResidentInfo.DateAdmitted" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.DateDischarged"></label>
+            <input asp-for="Input.ResidentInfo.DateDischarged" class="form-control" type="date" />
+            <span asp-validation-for="Input.ResidentInfo.DateDischarged" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.PhoneNumber"></label>
+            <input asp-for="Input.ResidentInfo.PhoneNumber" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.Gender"></label>
+            <select asp-for="Input.ResidentInfo.Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+            <span asp-validation-for="Input.ResidentInfo.Gender" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.DietNumber"></label>
+            <select asp-for="Input.ResidentInfo.DietNumber" asp-items="Html.GetEnumSelectList<DietNumber>()" class="form-control"></select>
+            <span asp-validation-for="Input.ResidentInfo.DietNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.RoomType"></label>
+            <select asp-for="Input.ResidentInfo.RoomType" asp-items="Html.GetEnumSelectList<RoomType>()" class="form-control"></select>
+            <span asp-validation-for="Input.ResidentInfo.RoomType" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Личен лекар</h5>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.GpName"></label>
+            <input asp-for="Input.ResidentInfo.GpName" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.GpName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.GpLocation"></label>
+            <input asp-for="Input.ResidentInfo.GpLocation" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.GpLocation" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.GpPhoneNumber"></label>
+            <input asp-for="Input.ResidentInfo.GpPhoneNumber" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.GpPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Семейство</h5>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.FamilyMemberName"></label>
+            <input asp-for="Input.ResidentInfo.FamilyMemberName" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.FamilyMemberName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.FamilyMemberPhoneNumber"></label>
+            <input asp-for="Input.ResidentInfo.FamilyMemberPhoneNumber" class="form-control" />
+            <span asp-validation-for="Input.ResidentInfo.FamilyMemberPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Доходи</h5>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.Pension"></label>
+            <input asp-for="Input.ResidentInfo.Pension" class="form-control" type="number" />
+            <span asp-validation-for="Input.ResidentInfo.Pension" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.Rent"></label>
+            <input asp-for="Input.ResidentInfo.Rent" class="form-control" type="number" />
+            <span asp-validation-for="Input.ResidentInfo.Rent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.Salary"></label>
+            <input asp-for="Input.ResidentInfo.Salary" class="form-control" type="number" />
+            <span asp-validation-for="Input.ResidentInfo.Salary" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.OtherIncome"></label>
+            <input asp-for="Input.ResidentInfo.OtherIncome" class="form-control" type="number" />
+            <span asp-validation-for="Input.ResidentInfo.OtherIncome" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Изключения от такси</h5>
+        <div class="form-check">
+            <input asp-for="Input.ResidentInfo.HasInheritance" class="form-check-input" type="checkbox" />
+            <label asp-for="Input.ResidentInfo.HasInheritance" class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+            <input asp-for="Input.ResidentInfo.HasSupportContract" class="form-check-input" type="checkbox" />
+            <label asp-for="Input.ResidentInfo.HasSupportContract" class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+            <input asp-for="Input.ResidentInfo.HasRealEstateSale" class="form-check-input" type="checkbox" />
+            <label asp-for="Input.ResidentInfo.HasRealEstateSale" class="form-check-label"></label>
+        </div>
+        <div class="form-check">
+            <input asp-for="Input.ResidentInfo.HasDonation" class="form-check-input" type="checkbox" />
+            <label asp-for="Input.ResidentInfo.HasDonation" class="form-check-label"></label>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+            <label asp-for="Input.ResidentInfo.EmployeeManagerId">Мениджър (служител)</label>
+            <select asp-for="Input.ResidentInfo.EmployeeManagerId" asp-items="Model.AvailableEmployees" class="form-control"></select>
+            <span asp-validation-for="Input.ResidentInfo.EmployeeManagerId" class="text-danger"></span>
+        </div>
+    </fieldset>
+
+    <fieldset id="employeeForm" style="display: none">
+        <legend>Информация за служителя</legend>
+        <div class="form-group">
+            <label asp-for="Input.EmployeeInfo.EmployeePosition"></label>
+            <select asp-for="Input.EmployeeInfo.EmployeePosition" asp-items="Html.GetEnumSelectList<EmployeePosition>()" class="form-control"></select>
+            <span asp-validation-for="Input.EmployeeInfo.EmployeePosition" class="text-danger"></span>
+        </div>
+    </fieldset>
+    <br />
+    <button type="submit" class="btn btn-primary">Регистрирай</button>
 </form>
 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function toggleRoleForms() {
+            const selectedRadio = document.querySelector('input[name="Input.UserRoleId"]:checked');
+            const roleName = selectedRadio?.dataset.name?.toLowerCase();
+
+            const isResident = roleName?.includes("потребител");
+            const isEmployee = roleName?.includes("служител");
+
+            document.getElementById("residentForm").style.display = isResident ? "block" : "none";
+            document.getElementById("employeeForm").style.display = isEmployee ? "block" : "none";
+        }
+
+        document.addEventListener("DOMContentLoaded", toggleRoleForms);
+    </script>
 }

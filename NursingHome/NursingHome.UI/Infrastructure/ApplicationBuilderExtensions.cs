@@ -43,23 +43,25 @@ namespace NursingHome.UI.Infrastructure
                     await roleManager.CreateAsync(new IdentityRole { Name = roleName });
                 }
             }
-            
-            var existingAdmin = await userManager.FindByEmailAsync("admin1@abv.bg");
+
+            const string adminEmail = "admin@abv.bg";
+            var existingAdmin = await userManager.FindByEmailAsync(adminEmail);
 
             if (existingAdmin == null)
             {
                 var admin = new ApplicationUser
                 {
-                    Email = "admin1@abv.bg",
-                    UserName = "admin",
+                    Email = adminEmail,
+                    UserName = adminEmail,
                     FirstName = "Георги",
                     MiddleName = "Иванов",
                     LastName = "Стаменов",
-                    UserStatus = UserStatus.Active,
-                    EmailConfirmed = true
+                    UserStatus = UserStatus.Active
                 };
 
-                var result = await userManager.CreateAsync(admin, "admin123");
+                const string adminPassword = "admin123";
+
+                var result = await userManager.CreateAsync(admin, adminPassword);
 
                 if (result.Succeeded)
                 {

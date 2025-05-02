@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NursingHome.BLL;
+using NursingHome.DAL;
 using NursingHome.DAL.Models;
+using NursingHome.UI.Infrastructure;
 using NursingHome.UI.Models.User;
 using static NursingHome.DAL.Common.ModelConstants;
 using static NursingHome.UI.Common.WebConstants;
@@ -15,30 +19,66 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserService _userService;
+        private readonly IMapper _mapper;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, RoleManager<IdentityRole> roleManager)
+            SignInManager<ApplicationUser> signInManager, 
+            RoleManager<IdentityRole> roleManager, 
+            UserService userService, 
+            IMapper mapper, 
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _userService = userService;
+            _mapper = mapper;
+            _context = context;
         }
 
         [BindProperty] public UserRegisterModel Input { get; set; } = new();
-        public List<SelectListItem>? Roles { get; set; }
+        public List<SelectListItem>? Roles { get; set; } = new();
+        public List<SelectListItem> AvailableEmployees { get; set; } = new();
 
         public async Task OnGetAsync()
         {
             Input = new UserRegisterModel();
+
             Roles = await _roleManager.Roles
                 .Where(r => r.Name != AdministratorRoleName)
-                .Select(r => new SelectListItem {Text = r.Name, Value = r.Id})
+                .Select(r => new SelectListItem {
+                    Value = r.Id, 
+                    Text = r.Name == "Employee" ? "Служител" : "Потребител"
+                })
                 .ToListAsync();
+
+            var employees = await _userManager.GetUsersInRoleAsync(EmployeeRoleName);
+            var usersWithEmployeeInfo = await _userService.GetUsersWithEmployeeInfo(employees);
+
+            AvailableEmployees = usersWithEmployeeInfo
+                .Select(u => new SelectListItem
+                {
+                    Value = u.Id,
+                    Text = $"{u.FirstName} {u.LastName} - {u.EmployeeInfo?.EmployeePosition.GetDisplayName()}"
+                })
+                .ToList();
+
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var selectedRole = await _roleManager.FindByIdAsync(Input.UserRoleId);
+            if (selectedRole == null)
+            {
+                ModelState.AddModelError(string.Empty, "Невалидна роля!");
+                return Page();
+            }
+
+            Input.SelectedRoleName = selectedRole.Name;
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -52,9 +92,30 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
                 };
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    switch (selectedRole.Name)
+                    {
+                        case EmployeeRoleName:
+                        {
+                            await _userManager.AddToRoleAsync(user, EmployeeRoleName);
+                            var employeeInfo = _mapper.Map<EmployeeInfo>(Input.EmployeeInfo);
+                            await _userService.RecordEmployeeInfo(user.Id, employeeInfo);
+                            break;
+                        }
+                        case RegularUserRoleName:
+                        {
+                            await _userManager.AddToRoleAsync(user, RegularUserRoleName);
+                            var residentInfo = _mapper.Map<ResidentInfo>(Input.ResidentInfo);
+                            await _userService.RecordResidentInfo(user.Id, residentInfo);
+                            break;
+                        }
+                    }
+
+                    TempData["ShowSuccessToast"] = "true";
+                    TempData["SuccessMessage"] = "Успешна регистрация!";
+
                     return LocalRedirect("/");
                 }
 

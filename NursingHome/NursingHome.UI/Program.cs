@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NursingHome.BLL;
 using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
+using NursingHome.UI.MappingConfiguration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddTransient<UserService>();
 
 var app = builder.Build();
 
