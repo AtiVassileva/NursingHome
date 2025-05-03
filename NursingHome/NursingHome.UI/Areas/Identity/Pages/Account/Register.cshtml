@@ -170,19 +170,43 @@
         <h5>Изключения от такси</h5>
         <div class="form-check">
             <input asp-for="Input.ResidentInfo.HasInheritance" class="form-check-input" type="checkbox" />
-            <label asp-for="Input.ResidentInfo.HasInheritance" class="form-check-label"></label>
+            <label asp-for="Input.ResidentInfo.HasInheritance" class="form-check-label">
+                Има наследство
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Има вземания, влогове, дялови участия и ценни книжа, чиято обща стойност надхвърля 500 лв.">❓</span>
+            </label>
         </div>
         <div class="form-check">
             <input asp-for="Input.ResidentInfo.HasSupportContract" class="form-check-input" type="checkbox" />
-            <label asp-for="Input.ResidentInfo.HasSupportContract" class="form-check-label"></label>
+            <label asp-for="Input.ResidentInfo.HasSupportContract" class="form-check-label">
+                Има договор за издръжка
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Има сключен договор за предоставяне на собственост срещу задължение за издръжка и/или гледане.">❓</span>
+            </label>
         </div>
         <div class="form-check">
             <input asp-for="Input.ResidentInfo.HasRealEstateSale" class="form-check-input" type="checkbox" />
-            <label asp-for="Input.ResidentInfo.HasRealEstateSale" class="form-check-label"></label>
+            <label asp-for="Input.ResidentInfo.HasRealEstateSale" class="form-check-label">
+                Има продажба на недвижим имот
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Прехвърлил е срещу заплащане собствеността върху недвижим имот и/или идеални части от него през последните 5 години и общата стойност на сделката/ите надвишава 60-кратния размер на гарантирания минимален дохов за съответния период.">❓</span>
+            </label>
         </div>
         <div class="form-check">
             <input asp-for="Input.ResidentInfo.HasDonation" class="form-check-input" type="checkbox" />
-            <label asp-for="Input.ResidentInfo.HasDonation" class="form-check-label"></label>
+            <label asp-for="Input.ResidentInfo.HasDonation" class="form-check-label">
+                Има дарение
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Прехвърлил е чрез договор за дарение собствеността върху недвижим имот и/или идеални части от него през последните 5 години.">❓</span>
+            </label>
         </div>
 
         <hr />

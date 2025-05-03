@@ -48,7 +48,8 @@ namespace NursingHome.UI.Controllers
                 return View("EditResident", residentEditModel);
             }
 
-            return View("EditEmployee");
+            var employeeEditModel = _mapper.Map<EmployeeEditModel>(user);
+            return View("EditEmployee", employeeEditModel);
         }
 
         [HttpPost]
@@ -72,6 +73,27 @@ namespace NursingHome.UI.Controllers
             }
 
             return RedirectToAction(nameof(ResidentsAccounts));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditEmployee(string id, EmployeeEditModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await _userUiService.EditEmployee(id, model);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+                return View(model);
+            }
+
+            return RedirectToAction(nameof(EmployeeAccounts));
         }
 
         private async Task FetchAvailableEmployees(ResidentEditModel residentEditModel)

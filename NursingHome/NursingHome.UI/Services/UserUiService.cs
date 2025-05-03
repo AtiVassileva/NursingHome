@@ -105,5 +105,25 @@ namespace NursingHome.UI.Services
 
             return IdentityResult.Failed();
         }
+        
+        public async Task<IdentityResult> EditEmployee(string id, EmployeeEditModel model)
+        {
+            var user = await _userManager.Users
+                .Include(u => u.EmployeeInfo)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return IdentityResult.Failed();
+
+            model.UserStatus = UserStatus.Active;
+            _mapper.Map(model, user);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+                return IdentityResult.Success;
+
+            return IdentityResult.Failed();
+        }
     }
 }

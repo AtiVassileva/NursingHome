@@ -5,6 +5,7 @@ namespace NursingHome.UI.Models.User
 {
     public class EmployeeEditModel : BaseEditModel
     {
-        
+        [Display(Name = "Длъжност")]
+        public EmployeePosition EmployeePosition { get; set; }
     }
 }

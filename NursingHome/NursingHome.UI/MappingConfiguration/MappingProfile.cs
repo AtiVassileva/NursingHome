@@ -28,19 +28,23 @@ namespace NursingHome.UI.MappingConfiguration
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.ResidentInfo!.Gender))
                 .ForMember(dest => dest.DietNumber, opt => opt.MapFrom(src => src.ResidentInfo!.DietNumber))
                 .ForMember(dest => dest.RoomType, opt => opt.MapFrom(src => src.ResidentInfo!.RoomType))
-                .ForMember(dest => dest.EmployeeManagerId, opt => opt.MapFrom(src => src.ResidentInfo!.EmployeeManagerId))
+                .ForMember(dest => dest.EmployeeManagerId,
+                    opt => opt.MapFrom(src => src.ResidentInfo!.EmployeeManagerId))
                 .ForMember(dest => dest.GpName, opt => opt.MapFrom(src => src.ResidentInfo!.GpName))
                 .ForMember(dest => dest.GpLocation, opt => opt.MapFrom(src => src.ResidentInfo!.GpLocation))
                 .ForMember(dest => dest.GpPhoneNumber, opt => opt.MapFrom(src => src.ResidentInfo!.GpPhoneNumber))
                 .ForMember(dest => dest.FamilyMemberName, opt => opt.MapFrom(src => src.ResidentInfo!.FamilyMemberName))
-                .ForMember(dest => dest.FamilyMemberPhoneNumber, opt => opt.MapFrom(src => src.ResidentInfo!.FamilyMemberPhoneNumber))
+                .ForMember(dest => dest.FamilyMemberPhoneNumber,
+                    opt => opt.MapFrom(src => src.ResidentInfo!.FamilyMemberPhoneNumber))
                 .ForMember(dest => dest.Pension, opt => opt.MapFrom(src => src.ResidentInfo!.Pension))
                 .ForMember(dest => dest.Rent, opt => opt.MapFrom(src => src.ResidentInfo!.Rent))
                 .ForMember(dest => dest.Salary, opt => opt.MapFrom(src => src.ResidentInfo!.Salary))
                 .ForMember(dest => dest.OtherIncome, opt => opt.MapFrom(src => src.ResidentInfo!.OtherIncome))
                 .ForMember(dest => dest.HasInheritance, opt => opt.MapFrom(src => src.ResidentInfo!.HasInheritance))
-                .ForMember(dest => dest.HasSupportContract, opt => opt.MapFrom(src => src.ResidentInfo!.HasSupportContract))
-                .ForMember(dest => dest.HasRealEstateSale, opt => opt.MapFrom(src => src.ResidentInfo!.HasRealEstateSale))
+                .ForMember(dest => dest.HasSupportContract,
+                    opt => opt.MapFrom(src => src.ResidentInfo!.HasSupportContract))
+                .ForMember(dest => dest.HasRealEstateSale,
+                    opt => opt.MapFrom(src => src.ResidentInfo!.HasRealEstateSale))
                 .ForMember(dest => dest.HasDonation, opt => opt.MapFrom(src => src.ResidentInfo!.HasDonation));
 
             CreateMap<ResidentEditModel, ApplicationUser>()
@@ -50,7 +54,7 @@ namespace NursingHome.UI.MappingConfiguration
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src.UserStatus))
-                
+
                 .AfterMap((src, dest) =>
                 {
                     if (dest.ResidentInfo == null)
@@ -77,6 +81,32 @@ namespace NursingHome.UI.MappingConfiguration
                     dest.ResidentInfo.HasSupportContract = src.HasSupportContract;
                     dest.ResidentInfo.HasRealEstateSale = src.HasRealEstateSale;
                     dest.ResidentInfo.HasDonation = src.HasDonation;
+                });
+
+            CreateMap<ApplicationUser, EmployeeEditModel>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(src => src.MiddleName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src.UserStatus))
+                .ForMember(dest => dest.EmployeePosition,
+                    opt => opt.MapFrom(src => src.EmployeeInfo!.EmployeePosition));
+
+            CreateMap<EmployeeEditModel, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(src => src.MiddleName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.UserStatus, opt => opt.MapFrom(src => src.UserStatus))
+
+                .AfterMap((src, dest) =>
+                {
+                    if (dest.EmployeeInfo == null)
+                        dest.EmployeeInfo = new EmployeeInfo();
+
+                    dest.EmployeeInfo.EmployeePosition = src.EmployeePosition;
                 });
         }
     }

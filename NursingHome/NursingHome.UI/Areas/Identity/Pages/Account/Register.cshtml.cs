@@ -121,9 +121,11 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
 
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);
+
+                return RedirectToAction("Index", "Home");
             }
 
-            return Page();
+            return BadRequest();
         }
     }
 }
