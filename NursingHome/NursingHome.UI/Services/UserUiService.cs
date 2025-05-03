@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using NursingHome.BLL;
 using NursingHome.DAL.Models;
 
 namespace NursingHome.UI.Services
@@ -7,10 +8,25 @@ namespace NursingHome.UI.Services
     public class UserUiService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserService _userService;
 
-        public UserUiService(UserManager<ApplicationUser> userManager)
+        public UserUiService(UserManager<ApplicationUser> userManager, UserService userService)
         {
             _userManager = userManager;
+            _userService = userService;
+        }
+
+        public async Task<IList<ApplicationUser>> GetEmployees()
+        {
+            return await _userManager.GetUsersInRoleAsync(EmployeeRoleName);
+        }
+        
+        public async Task<List<ApplicationUser>> GetResidents()
+        {
+            var residents = await _userManager.GetUsersInRoleAsync(RegularUserRoleName);
+            var residentsWithInfo = await _userService.GetUsersWithResidentInfo(residents);
+
+            return residentsWithInfo;
         }
 
         public List<string> GetUserRoleNamesInBulgarian(string email)

@@ -37,3 +37,8 @@ body {
 .action-icon {
     margin-right: 10px;
 }
+
+.btn-info {
+    font-weight: bold !important;
+    color: #FFFFFF !important;
+}

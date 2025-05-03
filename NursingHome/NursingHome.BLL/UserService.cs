@@ -29,6 +29,18 @@ namespace NursingHome.BLL
 
             return usersWithInfo;
         }
+        
+        public async Task<List<ApplicationUser>> GetUsersWithResidentInfo(IEnumerable<ApplicationUser> residents)
+        {
+            var residentIds = residents.Select(e => e.Id).ToList();
+
+            var usersWithInfo = await _dbContext.Users
+                .Where(u => residentIds.Contains(u.Id))
+                .Include(u => u.ResidentInfo)
+                .ToListAsync();
+
+            return usersWithInfo;
+        }
 
         public async Task RecordEmployeeInfo(string userId, EmployeeInfo employeeInfo)
         {
