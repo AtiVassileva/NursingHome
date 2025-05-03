@@ -40,7 +40,9 @@ namespace NursingHome.UI.Services
         public async Task<IList<ApplicationUser>> GetEmployees()
         {
             var employees = await _userManager.GetUsersInRoleAsync(EmployeeRoleName);
-            return employees;
+            var employeesWithInfo = await _userService.GetUsersWithEmployeeInfo(employees);
+
+            return employeesWithInfo;
         }
 
         public async Task<List<ApplicationUser>> GetResidents()

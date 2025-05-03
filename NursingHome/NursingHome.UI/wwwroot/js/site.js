@@ -1,4 +1,16 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function setupTableSearch(inputId, tableSelector) {
+    const input = document.getElementById(inputId);
+    const table = document.querySelector(tableSelector);
+    if (!input || !table) return;
 
-// Write your JavaScript code.
+    const rows = table.querySelectorAll("tbody tr");
+
+    input.addEventListener("input", function () {
+        const searchTerm = input.value.toLowerCase();
+        rows.forEach(row => {
+            const nameCell = row.querySelector("td");
+            const name = nameCell.textContent.toLowerCase();
+            row.style.display = name.includes(searchTerm) ? "" : "none";
+        });
+    });
+}
