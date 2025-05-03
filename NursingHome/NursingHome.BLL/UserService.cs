@@ -13,6 +13,21 @@ namespace NursingHome.BLL
             _dbContext = dbContext;
         }
 
+        public async Task<ApplicationUser> GetById(string id)
+        {
+            var user = await _dbContext.Users
+                .Include(u => u.EmployeeInfo)
+                .Include(u => u.ResidentInfo)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+            {
+                throw new NullReferenceException("User not found!");
+            }
+
+            return user;
+        }
+
         public async Task<List<ApplicationUser>> GetAllUsers()
         {
             return await _dbContext.Users.ToListAsync();

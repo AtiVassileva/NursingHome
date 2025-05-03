@@ -1,26 +1,48 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using NursingHome.BLL;
 using NursingHome.DAL.Models;
+using NursingHome.UI.Models.User;
 
 namespace NursingHome.UI.Services
 {
     using static Common.WebConstants;
+    using static NursingHome.DAL.Common.ModelConstants;
+
     public class UserUiService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly UserService _userService;
+        private readonly IMapper _mapper;
 
-        public UserUiService(UserManager<ApplicationUser> userManager, UserService userService)
+        public UserUiService(UserManager<ApplicationUser> userManager, UserService userService, IMapper mapper)
         {
             _userManager = userManager;
             _userService = userService;
+            _mapper = mapper;
+        }
+
+        public async Task<ApplicationUser> GetById(string id)
+        {
+            try
+            {
+                var user = await _userService.GetById(id);
+                return user;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
         }
 
         public async Task<IList<ApplicationUser>> GetEmployees()
         {
-            return await _userManager.GetUsersInRoleAsync(EmployeeRoleName);
+            var employees = await _userManager.GetUsersInRoleAsync(EmployeeRoleName);
+            return employees;
         }
-        
+
         public async Task<List<ApplicationUser>> GetResidents()
         {
             var residents = await _userManager.GetUsersInRoleAsync(RegularUserRoleName);
@@ -61,6 +83,27 @@ namespace NursingHome.UI.Services
             }
 
             return rolesInBulgarian;
+        }
+
+        public async Task<IdentityResult> EditResident(string id, ResidentEditModel model)
+        {
+            var user = await _userManager.Users
+                .Include(u => u.ResidentInfo)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                return IdentityResult.Failed();
+
+            model.UserStatus = model.DateDischarged is not null ? UserStatus.Inactive : UserStatus.Active;
+
+            _mapper.Map(model, user);
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+                return IdentityResult.Success;
+
+            return IdentityResult.Failed();
         }
     }
 }

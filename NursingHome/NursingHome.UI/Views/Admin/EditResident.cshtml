@@ -1,0 +1,195 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using static NursingHome.DAL.Common.ModelConstants
+
+@model ResidentEditModel
+
+<h1>Редакция на потребител</h1>
+
+<form asp-route-returnUrl="/" method="post" asp-controller="Admin" asp-action="EditResident" asp-route-id="@Model.Id" asp-all-route-model="@Model">
+
+    <fieldset id="personalDataForm">
+        <legend>Лични данни</legend>
+
+        <div class="form-group">
+            <label asp-for="@Model.FirstName"></label>
+            <input asp-for="@Model.FirstName" class="form-control" />
+            <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.MiddleName"></label>
+            <input asp-for="@Model.MiddleName" class="form-control" />
+            <span asp-validation-for="@Model.MiddleName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.LastName"></label>
+            <input asp-for="@Model.LastName" class="form-control" />
+            <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.Email"></label>
+            <input asp-for="@Model.Email" class="form-control" />
+            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+        </div>
+    </fieldset>
+
+    <br />
+    <fieldset id="residentEditForm">
+        <legend>Информация за потребителя</legend>
+
+        <div class="form-group">
+            <label asp-for="@Model.DateOfBirth"></label>
+            <input asp-for="@Model.DateOfBirth" class="form-control" type="date" />
+            <span asp-validation-for="@Model.DateOfBirth" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.DateAdmitted"></label>
+            <input asp-for="@Model.DateAdmitted" class="form-control" type="date" />
+            <span asp-validation-for="@Model.DateAdmitted" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.DateDischarged"></label>
+            <input asp-for="@Model.DateDischarged" class="form-control" type="date" />
+            <span asp-validation-for="@Model.DateDischarged" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.PhoneNumber"></label>
+            <input asp-for="@Model.PhoneNumber" class="form-control" />
+            <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.Gender"></label>
+            <select asp-for="@Model.Gender" asp-items="Html.GetEnumSelectList<Gender>()" class="form-control"></select>
+            <span asp-validation-for="@Model.Gender" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.DietNumber"></label>
+            <select asp-for="@Model.DietNumber" asp-items="Html.GetEnumSelectList<DietNumber>()" class="form-control"></select>
+            <span asp-validation-for="@Model.DietNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="@Model.RoomType"></label>
+            <select asp-for="@Model.RoomType" asp-items="Html.GetEnumSelectList<RoomType>()" class="form-control"></select>
+            <span asp-validation-for="@Model.RoomType" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Личен лекар</h5>
+        <div class="form-group">
+            <label asp-for="@Model.GpName"></label>
+            <input asp-for="@Model.GpName" class="form-control" />
+            <span asp-validation-for="@Model.GpName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.GpLocation"></label>
+            <input asp-for="@Model.GpLocation" class="form-control" />
+            <span asp-validation-for="@Model.GpLocation" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.GpPhoneNumber"></label>
+            <input asp-for="@Model.GpPhoneNumber" class="form-control" />
+            <span asp-validation-for="@Model.GpPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Семейство</h5>
+        <div class="form-group">
+            <label asp-for="@Model.FamilyMemberName"></label>
+            <input asp-for="@Model.FamilyMemberName" class="form-control" />
+            <span asp-validation-for="@Model.FamilyMemberName" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.FamilyMemberPhoneNumber"></label>
+            <input asp-for="@Model.FamilyMemberPhoneNumber" class="form-control" />
+            <span asp-validation-for="@Model.FamilyMemberPhoneNumber" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Доходи</h5>
+        <div class="form-group">
+            <label asp-for="@Model.Pension"></label>
+            <input asp-for="@Model.Pension" class="form-control" type="number" />
+            <span asp-validation-for="@Model.Pension" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Rent"></label>
+            <input asp-for="@Model.Rent" class="form-control" type="number" />
+            <span asp-validation-for="@Model.Rent" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Salary"></label>
+            <input asp-for="@Model.Salary" class="form-control" type="number" />
+            <span asp-validation-for="@Model.Salary" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.OtherIncome"></label>
+            <input asp-for="@Model.OtherIncome" class="form-control" type="number" />
+            <span asp-validation-for="@Model.OtherIncome" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5>Изключения от такси</h5>
+        <div class="form-check">
+            <input asp-for="@Model.HasInheritance" class="form-check-input" type="checkbox" />
+            <label asp-for="@Model.HasInheritance" class="form-check-label">
+                @Html.DisplayNameFor(m => m.HasInheritance)
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Има вземания, влогове, дялови участия и ценни книжа, чиято обща стойност надхвърля 500 лв.">❓</span>
+            </label>
+        </div>
+        <div class="form-check">
+            <input asp-for="@Model.HasSupportContract" class="form-check-input" type="checkbox" />
+            <label asp-for="@Model.HasSupportContract" class="form-check-label">
+                @Html.DisplayNameFor(m => m.HasSupportContract)
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Има сключен договор за предоставяне на собственост срещу задължение за издръжка и/или гледане.">❓</span>
+            </label>
+        </div>
+        <div class="form-check">
+            <input asp-for="@Model.HasRealEstateSale" class="form-check-input" type="checkbox" />
+            <label asp-for="@Model.HasRealEstateSale" class="form-check-label">
+                @Html.DisplayNameFor(m => m.HasRealEstateSale)
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Прехвърлил е срещу заплащане собствеността върху недвижим имот и/или идеални части от него през последните 5 години и общата стойност на сделката/ите надвишава 60-кратния размер на гарантирания минимален дохов за съответния период.">❓</span>
+            </label>
+        </div>
+        <div class="form-check">
+            <input asp-for="@Model.HasDonation" class="form-check-input" type="checkbox" />
+            <label asp-for="@Model.HasDonation" class="form-check-label">
+                @Html.DisplayNameFor(m => m.HasDonation)
+                <span class="text-info ml-1"
+                      style="cursor: help;"
+                      data-bs-toggle="tooltip"
+                      title="Прехвърлил е чрез договор за дарение собствеността върху недвижим имот и/или идеални части от него през последните 5 години.">❓</span>
+            </label>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+            <label asp-for="@Model.EmployeeManagerId">Мениджър (служител)</label>
+            <select asp-for="@Model.EmployeeManagerId" asp-items="@Model.AvailableEmployees" class="form-control"></select>
+            <span asp-validation-for="@Model.EmployeeManagerId" class="text-danger"></span>
+        </div>
+    </fieldset>
+    <br />
+    <button type="submit" class="btn btn-primary">Редактирай</button>
+</form>

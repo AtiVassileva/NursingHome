@@ -29,7 +29,7 @@
                 <td>@(user.ResidentInfo?.DateDischarged.ToString() ?? "-") </td>
             <td>@user.UserStatus.GetDisplayName()</td>
             <td class="d-flex justify-content-center">
-                <a href="/Edit/@user.Email" class="action-icon text-success" title="Редактирай">
+                    <a asp-controller="Admin" asp-action="EditUser" asp-route-userId="@user.Id"  class="action-icon text-success" title="Редактирай">
                     <i class="fas fa-edit"></i>
                 </a>
                 <a href="/Edit/@user.Email" class="action-icon text-danger" title="Изтрий">

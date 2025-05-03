@@ -35,10 +35,6 @@ namespace NursingHome.UI.Models.User
         [Compare("Password", ErrorMessage = "Паролите не съвпадат!")]
         public string ConfirmPassword { get; set; } = null!;
 
-        [Required(ErrorMessage = "Моля, изберете статус!")]
-        [Display(Name = "Статус на потребителя")]
-        public UserStatus UserStatus { get; set; }
-
         [Required] 
         public string UserRoleId { get; set; } = null!;
         public string? SelectedRoleName { get; set; }
