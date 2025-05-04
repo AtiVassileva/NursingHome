@@ -96,6 +96,17 @@ namespace NursingHome.UI.Controllers
             return RedirectToAction(nameof(EmployeeAccounts));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var result = await _userUiService.DeleteUser(id);
+
+            return result == "resident" 
+                ? RedirectToAction(nameof(ResidentsAccounts)) 
+                : RedirectToAction(nameof(EmployeeAccounts));
+        }
+
         private async Task FetchAvailableEmployees(ResidentEditModel residentEditModel)
         {
             var employees = await _userUiService.GetEmployees();

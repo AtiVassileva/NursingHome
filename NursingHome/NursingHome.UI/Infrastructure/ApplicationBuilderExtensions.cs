@@ -17,7 +17,9 @@ namespace NursingHome.UI.Infrastructure
         {
             builder.Services
                 .AddTransient<UserService>()
-                .AddTransient<UserUiService>();
+                .AddTransient<UserUiService>()
+                .AddTransient<ResidentInfoService>()
+                .AddTransient<EmployeeInfoService>();
         }
 
         public static async Task<IApplicationBuilder> PrepareDatabase(this IApplicationBuilder app)

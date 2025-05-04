@@ -23,23 +23,30 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-            <div class="toast-container position-fixed bottom-0 end-0 p-3">
-                <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            @TempData["SuccessMessage"]
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Затвори"></button>
-                    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Потвърждение за изтриване</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Затвори"></button>
+                </div>
+                <div class="modal-body">
+                    Наистина ли искате да изтриете <strong id="deleteItemName">този елемент</strong>?
+                </div>
+                <div class="modal-footer">
+                    <form id="deleteForm" method="post">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отказ</button>
+                        <button type="submit" class="btn btn-danger">Изтрий</button>
+                    </form>
                 </div>
             </div>
         </div>
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
+
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
 
     <footer class="border-top footer text-muted">
         <div class="container text-center">
@@ -51,15 +58,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var shouldShow = '@TempData["ShowSuccessToast"]' === 'true';
-            if (shouldShow) {
-                var toastElement = document.getElementById('successToast');
-                var toast = new bootstrap.Toast(toastElement);
-                toast.show();
-            }
-        });
-    </script>
 </body>
 </html>

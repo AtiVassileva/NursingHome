@@ -15,12 +15,16 @@ namespace NursingHome.UI.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly UserService _userService;
         private readonly IMapper _mapper;
+        private readonly ResidentInfoService _residentInfoService;
+        private readonly EmployeeInfoService _employeeInfoService;
 
-        public UserUiService(UserManager<ApplicationUser> userManager, UserService userService, IMapper mapper)
+        public UserUiService(UserManager<ApplicationUser> userManager, UserService userService, IMapper mapper, ResidentInfoService residentInfoService, EmployeeInfoService employeeInfoService)
         {
             _userManager = userManager;
             _userService = userService;
             _mapper = mapper;
+            _residentInfoService = residentInfoService;
+            _employeeInfoService = employeeInfoService;
         }
 
         public async Task<ApplicationUser> GetById(string id)
@@ -107,7 +111,7 @@ namespace NursingHome.UI.Services
 
             return IdentityResult.Failed();
         }
-        
+
         public async Task<IdentityResult> EditEmployee(string id, EmployeeEditModel model)
         {
             var user = await _userManager.Users
@@ -126,6 +130,36 @@ namespace NursingHome.UI.Services
                 return IdentityResult.Success;
 
             return IdentityResult.Failed();
+        }
+
+        public async Task<string> DeleteUser(string id)
+        {
+            var result = string.Empty;
+
+            var user = await _userService.GetById(id);
+
+            if (user == null)
+                return string.Empty;
+
+            var residentInfoForUser = await _residentInfoService.GetResidentInfoByUserId(id);
+
+            if (residentInfoForUser != null)
+            {
+                await _residentInfoService.DeleteResidentInfo(residentInfoForUser.Id);
+                result = "resident";
+            }
+
+            var employeeInfoForUser = await _employeeInfoService.GetEmployeeInfoByUserId(id);
+
+            if (employeeInfoForUser != null)
+            {
+                await _employeeInfoService.DeleteEmployeeInfo(employeeInfoForUser.Id);
+                result = "employee";
+            }
+
+            await _userManager.DeleteAsync(user);
+
+            return result;
         }
     }
 }

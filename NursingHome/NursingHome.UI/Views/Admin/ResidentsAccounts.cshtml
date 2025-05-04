@@ -1,4 +1,5 @@
-﻿@model List<ApplicationUser>
+﻿@using NursingHome.DAL.Common
+@model List<ApplicationUser>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -30,10 +31,10 @@
             <td>@(user.ResidentInfo?.DateDischarged.ToString() ?? "-") </td>
             <td>@user.UserStatus.GetDisplayName()</td>
             <td class="d-flex justify-content-center">
-                <a asp-controller="Admin" asp-action="EditUser" asp-route-userId="@user.Id"  class="action-icon text-success" title="Редактирай">
+                    <a asp-controller="Admin" asp-action="EditUser" asp-route-userId="@user.Id" class="btn btn-success btn-sm action-icon @(user.UserStatus == UserStatus.Inactive ? "disabled" : "")" title="Редактирай">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href="/Edit/@user.Email" class="action-icon text-danger" title="Изтрий">
+                    <a class="btn btn-danger btn-sm @(user.UserStatus == UserStatus.Inactive ? "disabled" : "")" title="Изтрий" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-name="@($"потребителя {user.FirstName} {user.LastName}")" data-delete-url="@($"/Admin/DeleteUser/{user.Id}")">
                     <i class="fas fa-trash"></i>
                 </a>
             </td>

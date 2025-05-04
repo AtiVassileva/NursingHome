@@ -1,9 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NursingHome.DAL;
+using NursingHome.DAL.Common;
 using NursingHome.DAL.Models;
 
 namespace NursingHome.BLL
 {
+    using static ModelConstants;
+
     public class UserService
     {
         private readonly ApplicationDbContext _dbContext;
@@ -18,7 +21,7 @@ namespace NursingHome.BLL
             var user = await _dbContext.Users
                 .Include(u => u.EmployeeInfo)
                 .Include(u => u.ResidentInfo)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id && u.UserStatus == UserStatus.Active);
 
             if (user == null)
             {

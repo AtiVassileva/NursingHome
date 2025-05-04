@@ -21,6 +21,10 @@ body {
   margin-bottom: 60px;
 }
 
+main {
+    padding: 10px 30px !important;
+}
+
 .container-fluid {
     background: #002966;
     width: 100%;
