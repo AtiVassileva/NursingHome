@@ -4,12 +4,12 @@ using NursingHome.DAL.Models;
 
 namespace NursingHome.DAL
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class NursingHomeDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext()
+        public NursingHomeDbContext()
         {
         }
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public NursingHomeDbContext(DbContextOptions<NursingHomeDbContext> options)
             : base(options)
         {
         }

@@ -6,9 +6,9 @@ namespace NursingHome.BLL
 {
     public class ResidentInfoService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly NursingHomeDbContext _dbContext;
 
-        public ResidentInfoService(ApplicationDbContext dbContext)
+        public ResidentInfoService(NursingHomeDbContext dbContext)
         {
             _dbContext = dbContext;
         }

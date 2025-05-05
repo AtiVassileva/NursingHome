@@ -11,7 +11,7 @@ using NursingHome.DAL;
 
 namespace NursingHome.DAL.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(NursingHomeDbContext))]
     [Migration("20250501141927_InitialCreate")]
     partial class InitialCreate
     {

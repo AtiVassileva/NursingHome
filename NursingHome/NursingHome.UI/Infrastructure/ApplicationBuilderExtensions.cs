@@ -37,7 +37,7 @@ namespace NursingHome.UI.Infrastructure
         private static void MigrateDatabase(IServiceProvider serviceProvider)
         {
             var dbContext = serviceProvider
-                .GetRequiredService<ApplicationDbContext>();
+                .GetRequiredService<NursingHomeDbContext>();
             dbContext.Database.Migrate();
         }
 

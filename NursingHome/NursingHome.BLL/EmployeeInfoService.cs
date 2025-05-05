@@ -6,9 +6,9 @@ namespace NursingHome.BLL
 {
     public class EmployeeInfoService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly NursingHomeDbContext _dbContext;
 
-        public EmployeeInfoService(ApplicationDbContext dbContext)
+        public EmployeeInfoService(NursingHomeDbContext dbContext)
         {
             _dbContext = dbContext;
         }

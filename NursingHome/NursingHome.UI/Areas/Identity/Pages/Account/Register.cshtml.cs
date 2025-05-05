@@ -21,22 +21,19 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserService _userService;
         private readonly IMapper _mapper;
-        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
             UserService userService, 
-            IMapper mapper, 
-            ApplicationDbContext context)
+            IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _userService = userService;
             _mapper = mapper;
-            _context = context;
         }
 
         [BindProperty] public UserRegisterModel Input { get; set; } = new();

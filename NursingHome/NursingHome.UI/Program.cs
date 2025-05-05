@@ -1,11 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NursingHome.BLL;
 using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.MappingConfiguration;
-using NursingHome.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +11,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<NursingHomeDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
@@ -27,7 +25,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequiredLength = 5;
 })
     .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<NursingHomeDbContext>();
 
 
 builder.Services.AddControllersWithViews()

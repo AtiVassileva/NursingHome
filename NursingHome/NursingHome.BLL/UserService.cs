@@ -9,9 +9,9 @@ namespace NursingHome.BLL
 
     public class UserService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly NursingHomeDbContext _dbContext;
 
-        public UserService(ApplicationDbContext dbContext)
+        public UserService(NursingHomeDbContext dbContext)
         {
             _dbContext = dbContext;
         }
