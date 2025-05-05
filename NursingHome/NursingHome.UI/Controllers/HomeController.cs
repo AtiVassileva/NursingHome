@@ -8,6 +8,8 @@ namespace NursingHome.UI.Controllers
     {
         public IActionResult Index() => View();
 
+        public IActionResult Contacts() => View();
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

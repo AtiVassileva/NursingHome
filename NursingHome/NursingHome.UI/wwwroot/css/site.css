@@ -59,3 +59,7 @@ main {
 .btn-darkBlue {
     background: #002966 !important;
 }
+
+.font-weight-bold {
+    font-weight: bold;
+}
