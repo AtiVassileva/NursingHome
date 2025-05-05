@@ -17,8 +17,9 @@ html {
     min-height: 100%;
 }
 
-body {
-    margin-bottom: 60px;
+html, body {
+    margin: 0;
+    padding: 0;
 }
 
 main {
@@ -31,11 +32,12 @@ main {
 }
 
 .home-container {
-    max-width: fit-content;
-    max-height: 400px;
-    background: url('../img/home.jpg');
+    width: 100%;
+    height: 80vh;
+    background: url(/img/home.jpeg);
     background-size: cover;
     background-repeat: no-repeat;
+    filter: brightness(70%);
 }
 
 .action-icon {
