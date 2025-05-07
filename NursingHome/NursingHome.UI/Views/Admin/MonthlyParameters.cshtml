@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Mесечни параметри";
+    var bulgarianCulture = new System.Globalization.CultureInfo("bg-BG");
+    var textInfo = bulgarianCulture.TextInfo;
 }
 
 <h2 class="mb-4">Mесечни параметри</h2>
@@ -11,9 +13,10 @@
         <div class="col-md-3">
             <label asp-for="Month" class="form-label">Месец</label>
             <select asp-for="Month" class="form-select" required>
-                @for (int m = 1; m <= 12; m++)
+                @for (var m = 1; m <= 12; m++)
                 {
-                    <option value="@m">@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m)</option>
+                    var monthName = textInfo.ToTitleCase(bulgarianCulture.DateTimeFormat.GetMonthName(m));
+                    <option value="@m">@monthName</option>
                 }
             </select>
         </div>
