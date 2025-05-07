@@ -16,6 +16,10 @@ namespace NursingHome.DAL
 
         public DbSet<ResidentInfo> ResidentInfos { get; set; } = null!;
         public DbSet<EmployeeInfo> EmployeeInfos { get; set; } = null!;
+        public DbSet<MonthlyParameter> MonthlyParameters { get; set; } = null!;
+        public DbSet<StayRate> StayRates { get; set; } = null!;
+        public DbSet<DietRate> DietRates { get; set; } = null!;
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -56,6 +60,18 @@ namespace NursingHome.DAL
             builder.Entity<ResidentInfo>()
                 .Property(r => r.OtherIncome)
                 .HasColumnType("decimal(18,2)");
+
+            builder.Entity<StayRate>()
+                .HasOne(sr => sr.Month)
+                .WithMany(mp => mp.StayRates)
+                .HasForeignKey(sr => sr.MonthId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<DietRate>()
+                .HasOne(dr => dr.Month)
+                .WithMany(mp => mp.DietRates)
+                .HasForeignKey(dr => dr.MonthId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
