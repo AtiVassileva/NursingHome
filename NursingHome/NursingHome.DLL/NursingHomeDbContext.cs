@@ -19,6 +19,7 @@ namespace NursingHome.DAL
         public DbSet<MonthlyParameter> MonthlyParameters { get; set; } = null!;
         public DbSet<StayRate> StayRates { get; set; } = null!;
         public DbSet<DietRate> DietRates { get; set; } = null!;
+        public DbSet<MonthlyFee> MonthlyFees { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -72,6 +73,16 @@ namespace NursingHome.DAL
                 .WithMany(mp => mp.DietRates)
                 .HasForeignKey(dr => dr.MonthId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<MonthlyFee>()
+                .HasOne(f => f.User)
+                .WithMany()
+                .HasForeignKey(f => f.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<MonthlyFee>()
+                .HasIndex(f => new { f.UserId, f.Month, f.Year })
+                .IsUnique();
         }
     }
 }

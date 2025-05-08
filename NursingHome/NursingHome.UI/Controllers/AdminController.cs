@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using NursingHome.BLL;
@@ -8,6 +9,7 @@ using NursingHome.UI.Services;
 
 namespace NursingHome.UI.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly UserUiService _userUiService;
@@ -138,6 +140,7 @@ namespace NursingHome.UI.Controllers
             TempData["Success"] = "Месечните параметри са запазени успешно!";
             return RedirectToAction("MonthlyParameters");
         }
+
 
 
         private async Task FetchAvailableEmployees(ResidentEditModel residentEditModel)
