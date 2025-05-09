@@ -47,7 +47,7 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account.Controller
             if (result.Succeeded)
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("ResidentsAccounts", "Admin");
             }
 
             foreach (var error in result.Errors)

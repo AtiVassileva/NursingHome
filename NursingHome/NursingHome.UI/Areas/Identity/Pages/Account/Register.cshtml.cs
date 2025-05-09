@@ -16,7 +16,6 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserService _userService;
@@ -24,13 +23,11 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, 
             RoleManager<IdentityRole> roleManager, 
             UserService userService, 
             IMapper mapper)
         {
             _userManager = userManager;
-            _signInManager = signInManager;
             _roleManager = roleManager;
             _userService = userService;
             _mapper = mapper;
@@ -113,7 +110,7 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
                     TempData["ShowSuccessToast"] = "true";
                     TempData["SuccessMessage"] = "Успешна регистрация!";
 
-                    return LocalRedirect("/");
+                    return RedirectToAction("ResidentsAccounts", "Admin");
                 }
 
                 foreach (var error in result.Errors)

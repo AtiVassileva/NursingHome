@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using NursingHome.DAL.Models;
+using NursingHome.UI.Models;
 using NursingHome.UI.Models.User;
 
 namespace NursingHome.UI.MappingConfiguration
@@ -108,6 +109,10 @@ namespace NursingHome.UI.MappingConfiguration
 
                     dest.EmployeeInfo.EmployeePosition = src.EmployeePosition;
                 });
+
+            CreateMap<MonthlyFeeViewModel, MonthlyFee>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.SelectedUserId))
+                .ReverseMap();
         }
     }
 }

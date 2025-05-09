@@ -31,9 +31,18 @@ namespace NursingHome.BLL
             return user;
         }
 
-        public async Task<List<ApplicationUser>> GetAllUsers()
+        public async Task<List<ApplicationUser>> GetAllActiveUsers()
         {
-            return await _dbContext.Users.ToListAsync();
+            return await _dbContext.Users
+                .Where(u => u.UserStatus == UserStatus.Active)
+                .ToListAsync();
+        }
+
+        public async Task<List<ApplicationUser>> GetAllInactiveUsers()
+        {
+            return await _dbContext.Users
+                .Where(u => u.UserStatus == UserStatus.Inactive)
+                .ToListAsync();
         }
 
         public async Task<List<ApplicationUser>> GetUsersWithEmployeeInfo(IEnumerable<ApplicationUser> employees)
@@ -47,7 +56,7 @@ namespace NursingHome.BLL
 
             return usersWithInfo;
         }
-        
+
         public async Task<List<ApplicationUser>> GetUsersWithResidentInfo(IEnumerable<ApplicationUser> residents)
         {
             var residentIds = residents.Select(e => e.Id).ToList();
@@ -60,13 +69,60 @@ namespace NursingHome.BLL
             return usersWithInfo;
         }
 
+        public async Task<decimal> GetResidentTotalIncome(string userId)
+        {
+            var user = await GetById(userId);
+
+            if (user == null || user.ResidentInfo == null)
+                return 0.0m;
+
+            var totalIncome = 0.0m;
+
+            if (user.ResidentInfo?.Pension.HasValue == true)
+            {
+                totalIncome += (decimal)user.ResidentInfo?.Pension.Value!;
+            }
+
+            if (user.ResidentInfo?.Rent.HasValue == true)
+            {
+                totalIncome += (decimal)user.ResidentInfo?.Rent.Value!;
+            }
+
+            if (user.ResidentInfo?.Salary.HasValue == true)
+            {
+                totalIncome += (decimal)user.ResidentInfo?.Salary.Value!;
+            }
+
+            if (user.ResidentInfo?.OtherIncome.HasValue == true)
+            {
+                totalIncome += (decimal)user.ResidentInfo?.OtherIncome.Value!;
+            }
+
+            return totalIncome;
+        }
+
+        public async Task<bool> HasResidentFeeExceptions(string userId)
+        {
+            var user = await GetById(userId);
+
+            if (user == null || user.ResidentInfo == null)
+                return false;
+
+            var hasExceptions = user.ResidentInfo?.HasDonation == true 
+                                || user.ResidentInfo?.HasInheritance == true 
+                                || user.ResidentInfo?.HasRealEstateSale == true 
+                                || user.ResidentInfo?.HasSupportContract == true;
+
+            return hasExceptions;
+        }
+
         public async Task RecordEmployeeInfo(string userId, EmployeeInfo employeeInfo)
         {
             employeeInfo.ApplicationUserId = userId;
             await _dbContext.EmployeeInfos.AddAsync(employeeInfo);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         public async Task RecordResidentInfo(string userId, ResidentInfo residentInfo)
         {
             residentInfo.ApplicationUserId = userId;

@@ -57,6 +57,26 @@ namespace NursingHome.UI.Services
             return residentsWithInfo;
         }
 
+        public async Task<List<ApplicationUser>> GetActiveResidents()
+        {
+            var residents = await GetResidents();
+            var activeResidents = residents
+                .Where(r => r.UserStatus == UserStatus.Active)
+                .ToList();
+
+            return activeResidents;
+        }
+
+        public async Task<List<ApplicationUser>> GetInactiveResidents()
+        {
+            var residents = await GetResidents();
+            var inactiveResidents = residents
+                .Where(r => r.UserStatus == UserStatus.Inactive)
+                .ToList();
+
+            return inactiveResidents;
+        }
+
         public List<string> GetUserRoleNamesInBulgarian(string email)
         {
             IList<string> roles = new List<string>();
