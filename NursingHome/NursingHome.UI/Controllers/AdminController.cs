@@ -34,6 +34,12 @@ namespace NursingHome.UI.Controllers
             var residents = await _userUiService.GetActiveResidents();
             return View(residents);
         }
+        
+        public async Task<IActionResult> GoToArchive()
+        {
+            var inactiveResidents = await _userUiService.GetInactiveResidents();
+            return View("ResidentsArchive", inactiveResidents);
+        }
 
         public async Task<IActionResult> EditUser(string userId)
         {

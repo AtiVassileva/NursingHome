@@ -23,7 +23,8 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<EmployeeInfoService>()
                 .AddTransient<MonthlyParameterService>()
                 .AddTransient<MonthlyFeeService>()
-                .AddTransient<FeeBookPdfGenerator>();
+                .AddTransient<FeeBookPdfGenerator>()
+                .AddTransient<FeeBookUiService>();
         }
 
         public static async Task<IApplicationBuilder> PrepareDatabase(this IApplicationBuilder app)

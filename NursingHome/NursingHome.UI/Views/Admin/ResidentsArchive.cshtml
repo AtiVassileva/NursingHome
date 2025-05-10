@@ -1,0 +1,39 @@
+﻿@model List<ApplicationUser>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<div class="d-flex align-items-center mb-3">
+    <h3 style="margin-right: 30px">Архив</h3>
+    <input type="text" id="residentArchiveSearch" class="form-control" placeholder="Търси по име..." style="width: 50% !important; height: fit-content">
+</div>
+
+<table id="residentArchiveTable" class="table table-bordered table-striped mt-3">
+    <thead class="table-light">
+        <tr>
+            <th>Име</th>
+            <th>Имейл</th>
+            <th>Завеждане</th>
+            <th>Изключване</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@string.Concat(user.FirstName, " ", user.MiddleName, " ", user.LastName)</td>
+                <td>@user.Email</td>
+                <td>@user.ResidentInfo?.DateAdmitted.ToString()</td>
+                <td>@(user.ResidentInfo?.DateDischarged.ToString() ?? "-") </td>
+                <td>@user.UserStatus.GetDisplayName()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setupTableSearch("residentArchiveSearch", "#residentArchiveTable");
+    });
+</script>

@@ -31,20 +31,6 @@ namespace NursingHome.BLL
             return user;
         }
 
-        public async Task<List<ApplicationUser>> GetAllActiveUsers()
-        {
-            return await _dbContext.Users
-                .Where(u => u.UserStatus == UserStatus.Active)
-                .ToListAsync();
-        }
-
-        public async Task<List<ApplicationUser>> GetAllInactiveUsers()
-        {
-            return await _dbContext.Users
-                .Where(u => u.UserStatus == UserStatus.Inactive)
-                .ToListAsync();
-        }
-
         public async Task<List<ApplicationUser>> GetUsersWithEmployeeInfo(IEnumerable<ApplicationUser> employees)
         {
             var employeeIds = employees.Select(e => e.Id).ToList();
@@ -52,6 +38,9 @@ namespace NursingHome.BLL
             var usersWithInfo = await _dbContext.Users
                 .Where(u => employeeIds.Contains(u.Id))
                 .Include(u => u.EmployeeInfo)
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.MiddleName)
+                .ThenBy(u => u.LastName)
                 .ToListAsync();
 
             return usersWithInfo;
@@ -64,6 +53,9 @@ namespace NursingHome.BLL
             var usersWithInfo = await _dbContext.Users
                 .Where(u => residentIds.Contains(u.Id))
                 .Include(u => u.ResidentInfo)
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.MiddleName)
+                .ThenBy(u => u.LastName)
                 .ToListAsync();
 
             return usersWithInfo;

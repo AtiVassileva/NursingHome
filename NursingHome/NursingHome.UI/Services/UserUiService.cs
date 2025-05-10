@@ -62,6 +62,9 @@ namespace NursingHome.UI.Services
             var residents = await GetResidents();
             var activeResidents = residents
                 .Where(r => r.UserStatus == UserStatus.Active)
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.MiddleName)
+                .ThenBy(u => u.LastName)
                 .ToList();
 
             return activeResidents;
@@ -71,6 +74,9 @@ namespace NursingHome.UI.Services
         {
             var residents = await GetResidents();
             var inactiveResidents = residents
+                .OrderBy(u => u.FirstName)
+                .ThenBy(u => u.MiddleName)
+                .ThenBy(u => u.LastName)
                 .Where(r => r.UserStatus == UserStatus.Inactive)
                 .ToList();
 
