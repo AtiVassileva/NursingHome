@@ -4,6 +4,7 @@ using NursingHome.BLL;
 using NursingHome.DAL;
 using NursingHome.DAL.Common;
 using NursingHome.DAL.Models;
+using NursingHome.UI.PdfGenerators;
 using NursingHome.UI.Services;
 
 namespace NursingHome.UI.Infrastructure
@@ -21,7 +22,8 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<ResidentInfoService>()
                 .AddTransient<EmployeeInfoService>()
                 .AddTransient<MonthlyParameterService>()
-                .AddTransient<MonthlyFeeService>();
+                .AddTransient<MonthlyFeeService>()
+                .AddTransient<FeeBookPdfGenerator>();
         }
 
         public static async Task<IApplicationBuilder> PrepareDatabase(this IApplicationBuilder app)

@@ -62,7 +62,8 @@ footer {
         color: #ffffff !important;
     }
 
-.btn-darkBlue {
+.btn-darkBlue, .btn-darkBlue:hover {
+    color: #ffffff;
     background: #002966 !important;
 }
 
@@ -76,4 +77,10 @@ footer {
 
 .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 33px !important;
+}
+
+.fee-book-table th,
+.fee-book-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
 }

@@ -31,7 +31,7 @@ namespace NursingHome.UI.Controllers
         
         public async Task<IActionResult> ResidentsAccounts()
         {
-            var residents = await _userUiService.GetResidents();
+            var residents = await _userUiService.GetActiveResidents();
             return View(residents);
         }
 

@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using NursingHome.BLL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Models;
+using NursingHome.UI.PdfGenerators;
 using NursingHome.UI.Services;
 
 namespace NursingHome.UI.Controllers
@@ -13,6 +13,7 @@ namespace NursingHome.UI.Controllers
     [Authorize]
     public class FeeController : Controller
     {
+        private readonly UserService _userService;
         private readonly UserUiService _userUiService;
         private readonly MonthlyParameterService _monthlyParameterService;
         private readonly MonthlyFeeService _monthlyFeeService;
@@ -22,6 +23,7 @@ namespace NursingHome.UI.Controllers
         {
             _userUiService = userUiService;
             _monthlyParameterService = monthlyParameterService;
+            _userService = userService;
             _monthlyFeeService = monthlyFeeService;
             _mapper = mapper;
         }
@@ -48,14 +50,25 @@ namespace NursingHome.UI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GenerateTaxBook()
+        public async Task<IActionResult> GenerateFeeBook()
         {
-            return View("TaxBook");
+            var vm = await CreateFeeBookViewModel();
+
+            return View("FeeBook", vm);
         }
+
+        public async Task<IActionResult> ExportFeeBookPdf()
+        {
+            var vm = await CreateFeeBookViewModel();
+            var pdfFile = FeeBookPdfGenerator.Generate(vm);
+
+            return File(pdfFile, "application/pdf", $"ТаксоваКнига_{vm.SelectedMonth}_{vm.SelectedYear}.pdf");
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Calculate(MonthlyFeeViewModel model, string userId = null)
+        public async Task<IActionResult> Calculate(MonthlyFeeViewModel model, string? userId)
         {
             if (!ModelState.IsValid)
             {
@@ -110,6 +123,52 @@ namespace NursingHome.UI.Controllers
                 .ToList();
 
             model.AllUsers = usersSelectList;
+        }
+
+        private async Task<FeeBookViewModel> CreateFeeBookViewModel()
+        {
+            var users = await _userUiService.GetActiveResidents();
+            var feeRows = new List<FeeBookRowViewModel>();
+
+            foreach (var user in users)
+            {
+                var monthlyFee =
+                    await _monthlyFeeService.GetMonthlyFeeForUserByMonth(user.Id, DateTime.Now.Month,
+                        DateTime.Now.Year);
+
+                var totalIncome = await _userService.GetResidentTotalIncome(user.Id);
+                var presentDays = monthlyFee?.PresentDays ?? 0;
+                var realCost = monthlyFee?.RealCost ?? 0;
+                var feeAmount = monthlyFee?.FeeAmount ?? 0;
+
+                var hasException = await _userService.HasResidentFeeExceptions(user.Id);
+
+                var row = new FeeBookRowViewModel
+                {
+                    FullName = string.Concat(user.FirstName, " ", user.MiddleName, " ", user.LastName),
+                    PresentDays = presentDays,
+                    RealCost = realCost,
+                    Pension = user.ResidentInfo?.Pension ?? 0.0m,
+                    Rent = user.ResidentInfo?.Rent ?? 0.0m,
+                    Salary = user.ResidentInfo?.Salary ?? 0.0m,
+                    OtherIncome = user.ResidentInfo?.OtherIncome ?? 0.0m,
+                    TotalIncome = totalIncome,
+                    PercentageType = hasException ? "РИ" : "70%",
+                    FeeCalculated = feeAmount,
+                    HasFeeException = hasException ? "ДА" : "НЕ"
+                };
+
+                feeRows.Add(row);
+            }
+
+            var vm = new FeeBookViewModel
+            {
+                SelectedMonth = DateTime.Now.Month,
+                SelectedYear = DateTime.Now.Year,
+                Rows = feeRows
+            };
+
+            return vm;
         }
     }
 }

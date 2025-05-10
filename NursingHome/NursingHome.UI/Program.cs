@@ -4,6 +4,7 @@ using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.MappingConfiguration;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,8 @@ builder.Services.AddControllersWithViews()
     }); 
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 builder.RegisterServicesCollection();
 

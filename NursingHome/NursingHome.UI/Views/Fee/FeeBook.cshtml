@@ -1,0 +1,72 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model FeeBookViewModel
+
+@{
+    ViewData["Title"] = "Таксова книга";
+    var bulgarianCulture = new CultureInfo("bg-BG");
+    var textInfo = bulgarianCulture.TextInfo;
+}
+
+<h2 class="mb-4">Таксова книга</h2>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <label asp-for="@Model.SelectedMonth" class="form-label"></label>
+        <select asp-for="@Model.SelectedMonth" class="form-select" id="Month">
+            @for (var i = 1; i <= 12; i++)
+            {
+                var monthName = textInfo.ToTitleCase(bulgarianCulture.DateTimeFormat.GetMonthName(i));
+                <option value="@i">@monthName</option>
+            }
+        </select>
+        <span asp-validation-for="@Model.SelectedMonth" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="@Model.SelectedYear" class="form-label"></label>
+        <input asp-for="@Model.SelectedYear" class="form-control" id="Year" />
+        <span asp-validation-for="@Model.SelectedYear" class="text-danger"></span>
+    </div>
+    <div class="col-md-4" style="display: flex; align-items: flex-end;">
+        <a asp-action="ExportFeeBookPdf" class="btn btn-darkBlue" target="_blank" style="height: fit-content">
+            Експортирай в PDF
+        </a>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped mt-4 fee-book-table">
+    <thead>
+    <tr>
+        <th>Три имена</th>
+        <th>Брой присъствени дни</th>
+        <th>Размер на действителни месечни разходи /РИ/</th>
+        <th>Пенсия</th>
+        <th>Наем</th>
+        <th>Заплата</th>
+        <th>Рента</th>
+        <th>Общ доход</th>
+        <th>Процент в зависимост от вида на СИ</th>
+        <th>Размер на дължимата сума</th>
+        <th>Изключения от таксата</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var row in Model.Rows)
+    {
+        <tr>
+            <td>@row.FullName</td>
+            <td>@row.PresentDays</td>
+            <td>@row.RealCost.ToString("F2")</td>
+            <td>@row.Pension.ToString("F2")</td>
+            <td>@row.Rent.ToString("F2")</td>
+            <td>@row.Salary.ToString("F2")</td>
+            <td>@row.OtherIncome.ToString("F2")</td>
+            <td>@row.TotalIncome.ToString("F2")</td>
+            <td>@row.PercentageType</td>
+            <td>@row.FeeCalculated.ToString("F2")</td>
+            <td>@row.HasFeeException</td>
+        </tr>
+    }
+    </tbody>
+</table>
