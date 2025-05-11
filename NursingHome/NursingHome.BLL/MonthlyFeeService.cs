@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NursingHome.DAL;
+using NursingHome.DAL.Common;
 using NursingHome.DAL.Models;
 
 namespace NursingHome.BLL
@@ -13,6 +14,17 @@ namespace NursingHome.BLL
         {
             _userService = userService;
             _dbContext = dbContext;
+        }
+
+        public async Task<List<MonthlyFee>> GetMonthlyFeesByMonth(int month, int year)
+        {
+            var monthlyFees = await _dbContext.MonthlyFees
+                .Include(m => m.Payment)
+                .Include(m => m.User)
+                .Where(m => m.Month == month && m.Year == year)
+                .ToListAsync();
+
+            return monthlyFees;
         }
 
         public async Task<MonthlyFee?> GetMonthlyFeeForUserByMonth(string userId, int month, int year)
@@ -64,6 +76,14 @@ namespace NursingHome.BLL
             else
             {
                 await _dbContext.MonthlyFees.AddAsync(model);
+
+                var payment = new Payment
+                {
+                    MonthlyFeeId = model.Id,
+                    Status = ModelConstants.PaymentStatus.Unpaid
+                };
+
+                await _dbContext.Payments.AddAsync(payment);
             }
 
             await _dbContext.SaveChangesAsync();

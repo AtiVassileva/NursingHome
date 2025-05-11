@@ -25,5 +25,7 @@ namespace NursingHome.DAL.Models
         [Required(ErrorMessage = "Моля, въведете дължима сума!")]
         [Display(Name = "Дължима сума")]
         public decimal FeeAmount { get; set; }
+        
+        public Payment? Payment { get; set; }
     }
 }

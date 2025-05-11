@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NursingHome.DAL;
 
@@ -11,9 +12,11 @@ using NursingHome.DAL;
 namespace NursingHome.DAL.Migrations
 {
     [DbContext(typeof(NursingHomeDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511114427_AddPayments")]
+    partial class AddPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,6 +341,9 @@ namespace NursingHome.DAL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
                     b.Property<Guid>("MonthlyFeeId")
                         .HasColumnType("uniqueidentifier");
 
@@ -346,8 +352,7 @@ namespace NursingHome.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MonthlyFeeId")
-                        .IsUnique();
+                    b.HasIndex("MonthlyFeeId");
 
                     b.ToTable("Payments");
                 });
@@ -550,8 +555,8 @@ namespace NursingHome.DAL.Migrations
             modelBuilder.Entity("NursingHome.DAL.Models.Payment", b =>
                 {
                     b.HasOne("NursingHome.DAL.Models.MonthlyFee", "MonthlyFee")
-                        .WithOne("Payment")
-                        .HasForeignKey("NursingHome.DAL.Models.Payment", "MonthlyFeeId")
+                        .WithMany()
+                        .HasForeignKey("MonthlyFeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -593,11 +598,6 @@ namespace NursingHome.DAL.Migrations
                     b.Navigation("EmployeeInfo");
 
                     b.Navigation("ResidentInfo");
-                });
-
-            modelBuilder.Entity("NursingHome.DAL.Models.MonthlyFee", b =>
-                {
-                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("NursingHome.DAL.Models.MonthlyParameter", b =>

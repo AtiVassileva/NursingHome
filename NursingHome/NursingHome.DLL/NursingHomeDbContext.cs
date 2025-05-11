@@ -20,6 +20,7 @@ namespace NursingHome.DAL
         public DbSet<StayRate> StayRates { get; set; } = null!;
         public DbSet<DietRate> DietRates { get; set; } = null!;
         public DbSet<MonthlyFee> MonthlyFees { get; set; } = null!;
+        public DbSet<Payment> Payments { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -83,6 +84,11 @@ namespace NursingHome.DAL
             builder.Entity<MonthlyFee>()
                 .HasIndex(f => new { f.UserId, f.Month, f.Year })
                 .IsUnique();
+
+            builder.Entity<MonthlyFee>()
+                .HasOne(mf => mf.Payment)
+                .WithOne(p => p.MonthlyFee)
+                .HasForeignKey<Payment>(p => p.MonthlyFeeId);
         }
     }
 }

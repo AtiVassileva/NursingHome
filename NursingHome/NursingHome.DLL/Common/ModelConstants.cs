@@ -65,5 +65,13 @@ namespace NursingHome.DAL.Common
             [Display(Name = "Работник кухня")]
             Cook = 5
         }
+
+        public enum PaymentStatus
+        {
+            [Display(Name = "Платено")]
+            Paid = 1,
+            [Display(Name = "Неплатено")]
+            Unpaid = 2
+        }
     }
 }

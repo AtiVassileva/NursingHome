@@ -6,7 +6,6 @@ using NursingHome.BLL;
 
 namespace NursingHome.UI.Infrastructure
 {
-
     public class PositionClaimsTransformer : IClaimsTransformation
     {
         private readonly UserManager<ApplicationUser> _userManager;

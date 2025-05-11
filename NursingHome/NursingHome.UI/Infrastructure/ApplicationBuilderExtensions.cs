@@ -26,6 +26,7 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<MonthlyFeeService>()
                 .AddTransient<FeeBookPdfGenerator>()
                 .AddTransient<FeeBookUiService>()
+                .AddTransient<PaymentService>()
                 .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }
 
