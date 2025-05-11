@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NursingHome.BLL;
 using NursingHome.DAL;
@@ -24,7 +25,8 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<MonthlyParameterService>()
                 .AddTransient<MonthlyFeeService>()
                 .AddTransient<FeeBookPdfGenerator>()
-                .AddTransient<FeeBookUiService>();
+                .AddTransient<FeeBookUiService>()
+                .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }
 
         public static async Task<IApplicationBuilder> PrepareDatabase(this IApplicationBuilder app)

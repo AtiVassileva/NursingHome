@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using NursingHome.DAL.Models;
+using static NursingHome.DAL.Common.ModelConstants;
 
 namespace NursingHome.UI.Infrastructure
 {
@@ -13,11 +14,20 @@ namespace NursingHome.UI.Infrastructure
         public static bool IsAdmin(this ClaimsPrincipal user)
             => user.IsInRole(AdministratorRoleName);
 
-        public static bool IsEmployee(this ClaimsPrincipal user)
-            => user.IsInRole(EmployeeRoleName);
+        public static bool IsPsychologist(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.Psychologist.ToString();
 
-        public static bool IsResident(this ClaimsPrincipal user)
-            => user.IsInRole(RegularUserRoleName);
+        public static bool IsCashier(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.Cashier.ToString();
+
+        public static bool IsOccupationalTherapist(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.OccupationalTherapist.ToString();
+
+        public static bool IsSocialWorker(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.SocialWorker.ToString();
+
+        public static bool IsCook(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.Cook.ToString();
 
         public static string GetFullName(this ClaimsPrincipal user, UserManager<ApplicationUser> userManager)
         {
