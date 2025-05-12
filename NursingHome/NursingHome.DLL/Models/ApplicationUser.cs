@@ -14,5 +14,7 @@ namespace NursingHome.DAL.Models
         public EmployeeInfo? EmployeeInfo { get; set; }
 
         [Required] public UserStatus UserStatus { get; set; }
+
+        public MedicalRecord? MedicalRecord { get; set; }
     }
 }

@@ -36,6 +36,14 @@
                     <a class="nav-link text-white" asp-controller="Admin" asp-action="ResidentsAccounts" style="color: #000 !important">Потребители</a>
                 </div>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdownMenu" role="button" style="color: #ffffff">
+                    Медицина
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <a class="nav-link text-white" asp-controller="MedicalRecords" asp-action="Index" style="color: #000 !important">Медицински досиета</a>
+                </div>
+            </li>
         }
         <li class="nav-item">
             <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Настройки</a>

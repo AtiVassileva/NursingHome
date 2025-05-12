@@ -21,6 +21,7 @@ namespace NursingHome.DAL
         public DbSet<DietRate> DietRates { get; set; } = null!;
         public DbSet<MonthlyFee> MonthlyFees { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<MedicalRecord> MedicalRecords { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -89,6 +90,12 @@ namespace NursingHome.DAL
                 .HasOne(mf => mf.Payment)
                 .WithOne(p => p.MonthlyFee)
                 .HasForeignKey<Payment>(p => p.MonthlyFeeId);
+
+            builder.Entity<MedicalRecord>()
+                .HasOne(m => m.User)
+                .WithOne(u => u.MedicalRecord)
+                .HasForeignKey<MedicalRecord>(m => m.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

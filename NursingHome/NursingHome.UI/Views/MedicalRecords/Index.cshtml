@@ -1,0 +1,40 @@
+﻿@model AllMedicalRecordsViewModel
+
+<div class="d-flex align-items-center mb-3">
+    <h3 class="margin-right-20">Медицински досиета</h3>
+    <input type="text" id="medicalSearch" class="form-control" placeholder="Търси по име..." style="width: 50% !important; height: fit-content">
+</div>
+
+<table id="medicalTable" class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Три имена</th>
+        <th>Диета</th>
+        <th>Алергии</th>
+        <th>Терапии</th>
+        <th>ТЕЛК %</th>
+        <th>Действие</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var record in Model.Records)
+    {
+        <tr>
+            <td>@record.FullName</td>
+            <td>@record.Diet</td>
+            <td>@record.Allergies</td>
+            <td>@record.Therapy</td>
+            <td>@record.DisabilityPercent %</td>
+            <td>
+                <a asp-controller="MedicalRecords" asp-action="Edit" asp-route-userId="@record.UserId" class="btn btn-darkBlue">Обнови досие</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setupTableSearch("medicalSearch", "#medicalTable");
+    });
+</script>

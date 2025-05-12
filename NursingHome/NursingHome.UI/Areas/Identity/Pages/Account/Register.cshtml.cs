@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NursingHome.BLL;
-using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.Models.User;
@@ -20,17 +19,19 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserService _userService;
         private readonly IMapper _mapper;
+        private readonly MedicalRecordService _medicalRecordService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager, 
             UserService userService, 
-            IMapper mapper)
+            IMapper mapper, MedicalRecordService medicalRecordService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _userService = userService;
             _mapper = mapper;
+            _medicalRecordService = medicalRecordService;
         }
 
         [BindProperty] public UserRegisterModel Input { get; set; } = new();
@@ -106,6 +107,8 @@ namespace NursingHome.UI.Areas.Identity.Pages.Account
                             break;
                         }
                     }
+
+                    await _medicalRecordService.CreateMedicalRecordForUser(user.Id);
 
                     TempData["ShowSuccessToast"] = "true";
                     TempData["SuccessMessage"] = "Успешна регистрация!";

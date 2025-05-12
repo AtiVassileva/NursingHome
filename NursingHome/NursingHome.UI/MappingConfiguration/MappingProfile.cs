@@ -113,6 +113,9 @@ namespace NursingHome.UI.MappingConfiguration
             CreateMap<MonthlyFeeViewModel, MonthlyFee>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.SelectedUserId))
                 .ReverseMap();
+
+            CreateMap<MedicalRecordRowViewModel, MedicalRecord>()
+                .ReverseMap();
         }
     }
 }
