@@ -37,7 +37,7 @@ namespace NursingHome.UI.Services
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return null;
+                return null!;
             }
         }
 
@@ -90,7 +90,7 @@ namespace NursingHome.UI.Services
             Task.Run(async () =>
             {
                 var user = await _userManager.FindByEmailAsync(email);
-                roles = await _userManager.GetRolesAsync(user);
+                roles = await _userManager.GetRolesAsync(user!);
 
             })
                 .GetAwaiter()
@@ -115,6 +115,19 @@ namespace NursingHome.UI.Services
             }
 
             return rolesInBulgarian;
+        }
+
+        public async Task<List<ApplicationUser>> GetBirthdaysThisMonthAsync()
+        {
+            var currentMonth = DateTime.Now.Month;
+            var residents = await GetActiveResidents();
+
+            var birthdays = residents
+            .Where(u => u.ResidentInfo!.DateOfBirth.Month == currentMonth)
+            .OrderBy(u => u.ResidentInfo!.DateOfBirth.Day)
+            .ToList();
+
+            return birthdays;
         }
 
         public async Task<IdentityResult> EditResident(string id, ResidentEditModel model)

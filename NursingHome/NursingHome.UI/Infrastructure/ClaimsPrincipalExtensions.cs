@@ -29,6 +29,9 @@ namespace NursingHome.UI.Infrastructure
         public static bool IsCook(this ClaimsPrincipal user)
             => user.FindFirst("position")?.Value == EmployeePosition.Cook.ToString();
 
+        public static bool IsNurse(this ClaimsPrincipal user)
+            => user.FindFirst("position")?.Value == EmployeePosition.Nurse.ToString();
+
         public static string GetFullName(this ClaimsPrincipal user, UserManager<ApplicationUser> userManager)
         {
             var fullName = string.Empty;

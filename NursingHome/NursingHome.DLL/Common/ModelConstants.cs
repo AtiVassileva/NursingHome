@@ -63,7 +63,9 @@ namespace NursingHome.DAL.Common
             [Display(Name = "Социален работник")]
             SocialWorker = 4,
             [Display(Name = "Работник кухня")]
-            Cook = 5
+            Cook = 5,
+            [Display(Name = "Медицинска сестра")]
+            Nurse = 6
         }
 
         public enum PaymentStatus
