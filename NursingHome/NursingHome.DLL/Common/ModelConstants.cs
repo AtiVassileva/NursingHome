@@ -75,5 +75,13 @@ namespace NursingHome.DAL.Common
             [Display(Name = "Неплатено")]
             Unpaid = 2
         }
+
+        public enum ReportType
+        {
+            [Display(Name = "Месечен")]
+            Monthly = 1,
+            [Display(Name = "Годишен")]
+            Yearly = 2
+        }
     }
 }

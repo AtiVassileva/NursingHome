@@ -56,7 +56,18 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenu">
                     <a class="nav-link text-white" asp-controller="OccupationalTherapists" asp-action="Birthdays" style="color: #000 !important">Рожденици</a>
-                    <a class="nav-link text-white" asp-controller="OccupationalTherapists" asp-action="Birthdays" style="color: #000 !important">Отчети</a>
+                    <a class="nav-link text-white" asp-controller="Reports" asp-action="Upload" style="color: #000 !important">Отчети</a>
+                </div>
+            </li>
+        }
+        @if (User.IsAdmin() || User.IsPsychologist())
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdownMenu" role="button" style="color: #ffffff">
+                    Психолози
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                    <a class="nav-link text-white" asp-controller="Reports" asp-action="Upload" style="color: #000 !important">Отчети</a>
                 </div>
             </li>
         }

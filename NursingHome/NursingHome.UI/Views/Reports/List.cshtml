@@ -1,0 +1,33 @@
+﻿@model IEnumerable<NursingHome.DAL.Models.Report>
+
+@{
+    ViewData["Title"] = "Качени отчети";
+}
+
+<h2>Качени отчети</h2>
+
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th>Тип</th>
+        <th>Име на файл</th>
+        <th>Качен от</th>
+        <th>Дата</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var r in Model)
+    {
+        <tr>
+            <td>@r.Type.GetDisplayName()</td>
+            <td>@r.FileName</td>
+                <td>@string.Concat(@r.UploadedBy?.FirstName, " ", @r.UploadedBy?.LastName)</td>
+            <td>@r.UploadedOn.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+            <td>
+                <a href="@r.FilePath" target="_blank" class="btn btn-darkBlue">Отвори файла</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
