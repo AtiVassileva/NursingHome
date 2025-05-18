@@ -28,6 +28,7 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<FeeBookUiService>()
                 .AddTransient<PaymentService>()
                 .AddTransient<MedicalRecordService>()
+                .AddTransient<SocialDocumentService>()
                 .AddTransient<FileUiService>()
                 .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }

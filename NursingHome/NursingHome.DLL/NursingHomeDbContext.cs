@@ -23,6 +23,7 @@ namespace NursingHome.DAL
         public DbSet<Payment> Payments { get; set; } = null!;
         public DbSet<MedicalRecord> MedicalRecords { get; set; } = null!;
         public DbSet<Report> Reports { get; set; } = null!;
+        public DbSet<SocialDocument> SocialDocuments { get; set; } = null!;
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -102,7 +103,20 @@ namespace NursingHome.DAL
                 .HasOne(r => r.UploadedBy)
                 .WithMany()
                 .HasForeignKey(r => r.UploadedById)
-                .OnDelete(DeleteBehavior.NoAction); 
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<SocialDocument>()
+                .HasOne(d => d.Resident)
+                .WithMany()
+                .HasForeignKey(d => d.ResidentId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<SocialDocument>()
+                .HasOne(d => d.UploadedBy)
+                .WithMany()
+                .HasForeignKey(d => d.UploadedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }

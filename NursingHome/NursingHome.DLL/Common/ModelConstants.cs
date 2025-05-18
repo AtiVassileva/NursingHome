@@ -83,5 +83,20 @@ namespace NursingHome.DAL.Common
             [Display(Name = "Годишен")]
             Yearly = 2
         }
+
+        public enum SocialDocumentType
+        {
+            [Display(Name = "Индивидуална оценка на потребностите от подкрепа /ИОП/")]
+            IOP,
+
+            [Display(Name = "Индивидуален план за подкрепа /ИПП/")]
+            IPP,
+
+            [Display(Name = "Договор за ползване на социални услуги")]
+            Contract,
+
+            [Display(Name = "Декларация за личните данни")]
+            GdprDeclaration
+        }
     }
 }

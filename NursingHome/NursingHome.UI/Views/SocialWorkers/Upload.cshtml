@@ -1,0 +1,44 @@
+﻿@model UploadSocialDocumentViewModel;
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Качване на социален документ</h3>
+    <a class="btn btn-darkBlue d-flex align-items-center justify-content-center" style="height: fit-content" asp-controller="SocialWorkers" asp-action="List">Прегледай качени документи</a>
+</div>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label asp-for="ResidentId" class="form-label">Потребител</label>
+        <select asp-for="ResidentId" class="form-select" asp-items="Model.Residents" id="userSelectDocuments">
+            <option value="">-- Избери потребител --</option>
+        </select>
+        <span asp-validation-for="ResidentId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DocumentType" class="form-label">Тип документ</label>
+        <select asp-for="DocumentType" class="form-select">
+            @foreach (SocialDocumentType value in Enum.GetValues(typeof(SocialDocumentType)))
+            {
+                <option value="@value">@value.GetDisplayName()</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="File" class="form-label">Файл</label>
+        <input asp-for="File" type="file" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-darkBlue">Качи</button>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#userSelectDocuments').select2({
+                placeholder: 'Търси по име...',
+                width: '100%' 
+            });
+        });
+    </script>
+}

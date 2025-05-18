@@ -1,0 +1,48 @@
+﻿@model List<SocialDocumentViewModel>
+
+<div class="d-flex align-items-center mb-3">
+    <h3 class="margin-right-20">Социални документи</h3>
+    <input type="text" id="socialDocsSearch" class="form-control" placeholder="Търси по име..." style="width: 50% !important; height: fit-content; margin-right: 20px">
+    <a class="btn btn-darkBlue d-flex align-items-center justify-content-center" style="height: fit-content" asp-controller="SocialWorkers" asp-action="Upload">Добавяне на документ</a>
+</div>
+
+@if (Model.Any())
+{
+    <table id="socialDocsTable" class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Потребител</th>
+                <th>Тип</th>
+                <th>Файл</th>
+                <th>Качен на</th>
+                <th>Качен от</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var doc in Model)
+            {
+                <tr>
+                    <td>@doc.ResidentName</td>
+                    <td>@doc.DocumentType.GetDisplayName()</td>
+                    <td>@doc.FileName</td>
+                    <td>@doc.UploadedOn.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                    <td>@string.Concat(doc.UploadedBy.FirstName, " ", doc.UploadedBy.LastName)</td>
+                    <td>
+                        <a href="@doc.FilePath" target="_blank" class="btn btn-darkBlue">Отвори файла</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Няма качени документи.</p>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        setupTableSearch("socialDocsSearch", "#socialDocsTable");
+    });
+</script>
