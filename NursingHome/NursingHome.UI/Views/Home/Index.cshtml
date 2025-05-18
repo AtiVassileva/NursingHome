@@ -1,2 +1,50 @@
-﻿<div class="home-container text-center">
+﻿@model IEnumerable<Message>
+
+<div class="container mt-4">
+    <h2 class="mb-4">📌 Информационно табло</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var message in Model)
+        {
+            var isAuthor = User.GetId() == message.AuthorId;
+
+            <div class="col">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title margin-right-20">
+                                <i class="bi bi-megaphone-fill text-primary"></i> @message.Title
+                            </h5>
+                            @if (isAuthor || User.IsAdmin())
+                            {
+                                <div class="mt-2">
+                                    <a asp-controller="Messages" asp-action="Edit" asp-route-id="@message.Id" class="btn btn-success btn-sm action-icon" title="Редактирай">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" title="Изтрий" data-bs-toggle="modal" data-bs-target="#deleteModal" data-item-name="@($"това съобщение")" data-delete-url="@($"/Messages/Delete/{message.Id}")">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+
+                        <h6 class="card-subtitle mb-2 text-muted">@message.CreatedOn.ToString("dd.MM.yyyy")</h6>
+                        <p class="card-text">@message.Content</p>
+
+                        @if (!string.IsNullOrEmpty(message.AttachmentFilePath))
+                        {
+                            <a href="@message.AttachmentFilePath" class="btn btn-sm btn-outline-primary" target="_blank">
+                                📎 Виж прикачения файл
+                            </a>
+                        }
+
+                        <div class="mt-3 text-end text-muted small">
+                            <span>До: @message.Audience.GetDisplayName()</span><br />
+                            <span>Автор: @string.Concat(message.Sender.FirstName, " ", message.Sender.LastName)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>

@@ -25,6 +25,7 @@ namespace NursingHome.DAL
         public DbSet<Report> Reports { get; set; } = null!;
         public DbSet<SocialDocument> SocialDocuments { get; set; } = null!;
         public DbSet<WeeklyMenu> WeeklyMenus { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -121,6 +122,12 @@ namespace NursingHome.DAL
                 .HasOne(w => w.UploadedBy)
                 .WithMany()
                 .HasForeignKey(w => w.UploadedById)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany()
+                .HasForeignKey(m => m.AuthorId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

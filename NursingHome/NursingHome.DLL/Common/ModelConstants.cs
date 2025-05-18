@@ -98,5 +98,17 @@ namespace NursingHome.DAL.Common
             [Display(Name = "Декларация за личните данни")]
             GdprDeclaration
         }
+
+        public enum MessageAudience
+        {
+            [Display(Name = "Служители")]
+            Staff = 1,
+
+            [Display(Name = "Потребители")]
+            Users = 2,
+
+            [Display(Name = "Служители и потребители")]
+            Both = 3
+        }
     }
 }

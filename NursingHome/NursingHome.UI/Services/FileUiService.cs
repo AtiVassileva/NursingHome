@@ -202,5 +202,45 @@ namespace NursingHome.UI.Services
                 return false;
             }
         }
+
+        public async Task CreateMessage(MessageCreateViewModel model, ClaimsPrincipal user)
+        {
+            try
+            {
+                var author = await _userManager.GetUserAsync(user);
+
+                string? filePath = null;
+                string? fileName = null;
+
+                if (model.Attachment != null)
+                {
+                    var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "messages");
+                    Directory.CreateDirectory(uploadsDir);
+
+                    fileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.Attachment.FileName)}";
+                    filePath = Path.Combine(uploadsDir, fileName);
+
+                    await using var stream = new FileStream(filePath, FileMode.Create);
+                    await model.Attachment.CopyToAsync(stream);
+                }
+
+                var message = new Message
+                {
+                    Title = model.Title,
+                    Content = model.Content,
+                    Audience = model.Audience,
+                    AuthorId = author!.Id,
+                    AttachmentFileName = fileName,
+                    AttachmentFilePath = filePath != null ? $"/uploads/messages/{fileName}" : null
+                };
+
+                _context.Messages.Add(message);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
     }
 }

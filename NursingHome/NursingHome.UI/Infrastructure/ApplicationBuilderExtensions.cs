@@ -31,6 +31,7 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<SocialDocumentService>()
                 .AddTransient<ReportService>()
                 .AddTransient<WeeklyMenuService>()
+                .AddTransient<MessageService>()
                 .AddTransient<FileUiService>()
                 .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }
