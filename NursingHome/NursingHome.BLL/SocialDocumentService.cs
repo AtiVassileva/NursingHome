@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NursingHome.DAL;
 using NursingHome.DAL.Models;
+using static NursingHome.DAL.Common.ModelConstants;
 
 namespace NursingHome.BLL
 {
@@ -12,6 +13,10 @@ namespace NursingHome.BLL
         {
             _dbContext = dbContext;
         }
+
+        public async Task<SocialDocument?> GetByTypeAndResident(string residentId, SocialDocumentType type)
+         => await _dbContext.SocialDocuments
+             .FirstOrDefaultAsync(d => d.ResidentId == residentId && d.DocumentType == type);
 
         public async Task<List<SocialDocument>> GetAll() 
             => await _dbContext.SocialDocuments

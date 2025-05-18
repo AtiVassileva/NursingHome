@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using NursingHome.DAL;
 using NursingHome.DAL.Models;
 using System.Security.Claims;
+using NursingHome.BLL;
 using NursingHome.UI.Models;
 using static NursingHome.DAL.Common.ModelConstants;
 
@@ -13,27 +13,17 @@ namespace NursingHome.UI.Services
         private readonly NursingHomeDbContext _context;
         private readonly IWebHostEnvironment _env;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ReportService _reportService;
+        private readonly SocialDocumentService _socialDocumentService;
 
-        public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env, UserManager<ApplicationUser> userManager)
+        public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, ReportService reportService, SocialDocumentService socialDocumentService)
         {
             _context = context;
             _env = env;
             _userManager = userManager;
+            _reportService = reportService;
+            _socialDocumentService = socialDocumentService;
         }
-
-        public async Task<List<Report>> GetOccupationalTherapistsReports()
-            => await _context.Reports
-                .Include(r => r.UploadedBy)
-                .Where(r => r.UploadedBy!.EmployeeInfo!.EmployeePosition == EmployeePosition.OccupationalTherapist)
-                .OrderByDescending(r => r.UploadedOn)
-                .ToListAsync();
-
-        public async Task<List<Report>> GetPsychologistsReports()
-            => await _context.Reports
-                .Include(r => r.UploadedBy)
-                .Where(r => r.UploadedBy!.EmployeeInfo!.EmployeePosition == EmployeePosition.Psychologist)
-                .OrderByDescending(r => r.UploadedOn)
-                .ToListAsync();
 
         public async Task<bool> UploadReport(IFormFile file, ReportType type, ClaimsPrincipal user)
         {
@@ -49,11 +39,7 @@ namespace NursingHome.UI.Services
                 var fullPath = Path.Combine(uploadsDir, uniqueName);
                 var virtualPath = $"/uploads/reports/{uniqueName}";
 
-                var existing = await _context.Reports
-                    .FirstOrDefaultAsync(r =>
-                        r.Type == type &&
-                        r.UploadedOn.Month == now.Month &&
-                        r.UploadedOn.Year == now.Year);
+                var existing = await _reportService.GetByMonthAndType(type, DateTime.Now.Month, DateTime.Now.Year);
 
                 if (existing != null)
                 {
@@ -105,8 +91,7 @@ namespace NursingHome.UI.Services
         {
             try
             {
-                var existing = await _context.SocialDocuments
-                    .FirstOrDefaultAsync(d => d.ResidentId == model.ResidentId && d.DocumentType == model.DocumentType);
+                var existing = await _socialDocumentService.GetByTypeAndResident(model.ResidentId, model.DocumentType);
 
                 var fileName = $"{model.DocumentType}_{model.File.FileName}_{model.ResidentId}{Path.GetExtension(model.File.FileName)}";
                 var folder = Path.Combine(_env.WebRootPath, "uploads", "social");
@@ -122,7 +107,7 @@ namespace NursingHome.UI.Services
 
                 if (existing != null)
                 {
-                    System.IO.File.Delete(Path.Combine(folder, existing.FileName));
+                    File.Delete(Path.Combine(folder, existing.FileName));
 
                     existing.FileName = fileName;
                     existing.FilePath = $"/uploads/social/{fileName}";

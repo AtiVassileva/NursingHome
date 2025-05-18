@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NursingHome.BLL;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.Services;
 using static NursingHome.DAL.Common.ModelConstants;
@@ -10,10 +11,12 @@ namespace NursingHome.UI.Controllers;
 public class ReportsController : Controller
 {
     private readonly FileUiService _filesUiService;
+    private readonly ReportService _reportService;
 
-    public ReportsController(FileUiService filesUiService)
+    public ReportsController(FileUiService filesUiService, ReportService reportService)
     {
         _filesUiService = filesUiService;
+        _reportService = reportService;
     }
 
     [HttpGet]
@@ -46,8 +49,8 @@ public class ReportsController : Controller
     public async Task<IActionResult> List()
     {
         var reports = User.IsOccupationalTherapist()
-            ? await _filesUiService.GetOccupationalTherapistsReports()
-            : await _filesUiService.GetPsychologistsReports();
+            ? await _reportService.GetOccupationalTherapistsReports()
+            : await _reportService.GetPsychologistsReports();
 
         return View(reports);
     }

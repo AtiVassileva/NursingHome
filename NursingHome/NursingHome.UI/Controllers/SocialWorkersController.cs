@@ -64,7 +64,12 @@ namespace NursingHome.UI.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            await _fileUiService.UploadSocialDocument(User, model);
+            var isSuccessfullyUploaded = await _fileUiService.UploadSocialDocument(User, model);
+
+            if (!isSuccessfullyUploaded)
+            {
+                return View(model);
+            }
 
             return RedirectToAction(nameof(List));
         }
