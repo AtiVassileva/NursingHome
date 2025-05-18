@@ -18,10 +18,11 @@ namespace NursingHome.UI.Services
         private readonly ReportService _reportService;
         private readonly SocialDocumentService _socialDocumentService;
         private readonly WeeklyMenuService _weeklyMenuService;
+        private readonly MessageService _messageService;
 
         public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager, ReportService reportService,
-            SocialDocumentService socialDocumentService, WeeklyMenuService weeklyMenuService)
+            SocialDocumentService socialDocumentService, WeeklyMenuService weeklyMenuService, MessageService messageService)
         {
             _context = context;
             _env = env;
@@ -29,6 +30,7 @@ namespace NursingHome.UI.Services
             _reportService = reportService;
             _socialDocumentService = socialDocumentService;
             _weeklyMenuService = weeklyMenuService;
+            _messageService = messageService;
         }
 
         public async Task<bool> UploadReport(IFormFile file, ReportType type, ClaimsPrincipal user)
@@ -203,7 +205,7 @@ namespace NursingHome.UI.Services
             }
         }
 
-        public async Task CreateMessage(MessageCreateViewModel model, ClaimsPrincipal user)
+        public async Task CreateMessageWithFile(MessageCreateViewModel model, ClaimsPrincipal user)
         {
             try
             {
@@ -212,16 +214,16 @@ namespace NursingHome.UI.Services
                 string? filePath = null;
                 string? fileName = null;
 
-                if (model.Attachment != null)
+                if (model.File != null)
                 {
                     var uploadsDir = Path.Combine(_env.WebRootPath, "uploads", "messages");
                     Directory.CreateDirectory(uploadsDir);
 
-                    fileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.Attachment.FileName)}";
+                    fileName = $"{Guid.NewGuid()}_{Path.GetFileName(model.File.FileName)}";
                     filePath = Path.Combine(uploadsDir, fileName);
 
                     await using var stream = new FileStream(filePath, FileMode.Create);
-                    await model.Attachment.CopyToAsync(stream);
+                    await model.File.CopyToAsync(stream);
                 }
 
                 var message = new Message
@@ -241,6 +243,43 @@ namespace NursingHome.UI.Services
             {
                 Console.WriteLine(e.Message);
             }
+        }
+
+        public async Task<bool> EditMessageWithFile(MessageCreateViewModel model, string currentUserId)
+        {
+            var message = await _messageService.GetById(model.Id);
+
+            if (message == null || message.AuthorId != currentUserId)
+                return false;
+
+            message.Title = model.Title;
+            message.Content = model.Content;
+
+            if (model.File != null && model.File.Length > 0)
+            {
+                if (!string.IsNullOrEmpty(message.AttachmentFilePath))
+                {
+                    var oldFilePath = Path.Combine(_env.WebRootPath, message.AttachmentFilePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
+                        System.IO.File.Delete(oldFilePath);
+                }
+
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "messages");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = $"{Guid.NewGuid()}_{model.File.FileName}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                    await model.File.CopyToAsync(stream);
+
+                message.AttachmentFileName = model.File.FileName;
+                message.AttachmentFilePath = $"/uploads/messages/{fileName}";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

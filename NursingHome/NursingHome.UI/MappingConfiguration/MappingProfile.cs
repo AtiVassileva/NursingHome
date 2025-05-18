@@ -122,6 +122,9 @@ namespace NursingHome.UI.MappingConfiguration
                 .ReverseMap()
                 .ForMember(dest => dest.Birthday, opt => opt.MapFrom(src => src.ResidentInfo!.DateOfBirth))
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => string.Concat(src.FirstName, " ", src.MiddleName, " ", src.LastName)));
+
+            CreateMap<MessageCreateViewModel, Message>()
+                .ReverseMap();
         }
     }
 }

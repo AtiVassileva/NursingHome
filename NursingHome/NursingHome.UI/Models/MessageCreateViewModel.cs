@@ -19,7 +19,11 @@ namespace NursingHome.UI.Models
         [Display(Name = "Целева аудитория")]
         public MessageAudience Audience { get; set; }
 
-        [Display(Name = "Прикачен файл")]
-        public IFormFile? Attachment { get; set; }
+        public string? AttachmentFileName { get; set; }
+        public string? AttachmentFilePath { get; set; }
+
+        public IFormFile? File { get; set; }
+
+        public string? Action => Id != Guid.Empty ? "Edit" : "Create";
     }
 }

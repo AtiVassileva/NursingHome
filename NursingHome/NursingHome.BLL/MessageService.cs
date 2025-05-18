@@ -37,5 +37,20 @@ namespace NursingHome.BLL
                 .Where(m => m.Audience == MessageAudience.Users)
                 .OrderByDescending(m => m.CreatedOn)
                 .ToListAsync();
+
+        public async Task<bool> Delete(Guid id, string userId)
+        {
+            var message = await GetById(id);
+
+            if (message == null || message.AuthorId != userId)
+            {
+                return false;
+            }
+
+            _dbContext.Messages.Remove(message);
+            await _dbContext.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

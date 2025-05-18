@@ -1,8 +1,8 @@
-﻿@model Message
+﻿@model MessageCreateViewModel
 
-<h3>@ViewData["Title"]</h3>
+<h3>@(Model.Action == "Edit" ? "Редакция" : "Ново съобщение")</h3>
 
-<form asp-action="@ViewData["Action"]" method="post" enctype="multipart/form-data">
+<form asp-action="@Model.Action" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="Id" />
 
     <div class="mb-3">
@@ -18,15 +18,16 @@
     </div>
 
     <div class="mb-3">
-        @if (ViewData["Action"].ToString().ToLower() == "edit" && Model?.AttachmentFilePath != null)
+        @if (Model.Action == "Edit" && Model?.AttachmentFilePath != null)
         {
             <p>
                 Текущ файл:
                 <a href="@Model.AttachmentFilePath" target="_blank" class="text-secondary">@Model.AttachmentFileName</a>
             </p>
         }
-        <label for="file" class="form-label">@(ViewData["Action"] == "Create" ? "Прикачен файл (по избор)" : "Нов файл (по избор)")</label>
-        <input type="file" name="file" class="form-control" />
+
+        <label for="File" class="form-label">@(Model.Action == "Create" ? "Прикачен файл (по избор)" : "Нов файл (по избор)")</label>
+        <input asp-for="File" class="form-control" />
     </div>
 
     <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Назад</a>
