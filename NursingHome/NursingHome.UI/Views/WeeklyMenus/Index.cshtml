@@ -1,0 +1,20 @@
+﻿@model WeeklyMenu?
+
+<div class="d-flex justify-content-center align-items-center mb-3 mt-1">
+    <h3 class="margin-right-20">Седмично меню - @DateTime.Now.GetMondayOfCurrentWeek().ToString("dd.MM.yyyy") - @DateTime.Now.GetSundayOfCurrentWeek().ToString("dd.MM.yyyy")</h3>
+    @if (User.IsAdmin() || User.IsCook())
+    {
+        <a class="btn btn-darkBlue d-flex align-items-center justify-content-center" style="height: fit-content" asp-controller="WeeklyMenus" asp-action="Upload">Качи ново меню</a>
+    }
+</div>
+
+@if (Model is null)
+{
+    <p>Няма качено седмично меню.</p>
+}
+else
+{
+    <div class="d-flex justify-content-center">
+        <iframe src="~/uploads/weeklymenus/@(Model.FileName)" width="100%" height="800px" style="border: none;"></iframe>
+    </div>
+}

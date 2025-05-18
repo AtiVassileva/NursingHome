@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Седмично меню";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Качване на седмично меню</h3>
+    <a class="btn btn-darkBlue d-flex align-items-center justify-content-center" style="height: fit-content" asp-controller="WeeklyMenus" asp-action="Index">Прегледай качени менюта</a>
+</div>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label">Изберете файл</label>
+        <input type="file" name="file" class="form-control" required placeholder="Изберете файл" />
+    </div>
+    <button type="submit" class="btn btn-darkBlue">Качи</button>
+</form>

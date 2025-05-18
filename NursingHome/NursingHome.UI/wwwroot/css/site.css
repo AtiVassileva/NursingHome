@@ -35,6 +35,10 @@ footer {
     width: 100%;
 }
 
+.darkBlue-bg {
+    background: #002966 !important;
+}
+
 .login-page-container {
     width: 100%;
     height: 80vh;

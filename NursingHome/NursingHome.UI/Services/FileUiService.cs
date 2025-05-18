@@ -5,6 +5,8 @@ using System.Security.Claims;
 using NursingHome.BLL;
 using NursingHome.UI.Models;
 using static NursingHome.DAL.Common.ModelConstants;
+using NursingHome.UI.Infrastructure;
+using static NuGet.Packaging.PackagingConstants;
 
 namespace NursingHome.UI.Services
 {
@@ -15,14 +17,18 @@ namespace NursingHome.UI.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ReportService _reportService;
         private readonly SocialDocumentService _socialDocumentService;
+        private readonly WeeklyMenuService _weeklyMenuService;
 
-        public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, ReportService reportService, SocialDocumentService socialDocumentService)
+        public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env,
+            UserManager<ApplicationUser> userManager, ReportService reportService,
+            SocialDocumentService socialDocumentService, WeeklyMenuService weeklyMenuService)
         {
             _context = context;
             _env = env;
             _userManager = userManager;
             _reportService = reportService;
             _socialDocumentService = socialDocumentService;
+            _weeklyMenuService = weeklyMenuService;
         }
 
         public async Task<bool> UploadReport(IFormFile file, ReportType type, ClaimsPrincipal user)
@@ -43,7 +49,8 @@ namespace NursingHome.UI.Services
 
                 if (existing != null)
                 {
-                    var oldPath = Path.Combine(_env.WebRootPath, existing.FilePath.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                    var oldPath = Path.Combine(_env.WebRootPath,
+                        existing.FilePath.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
 
                     if (File.Exists(oldPath))
                     {
@@ -93,7 +100,8 @@ namespace NursingHome.UI.Services
             {
                 var existing = await _socialDocumentService.GetByTypeAndResident(model.ResidentId, model.DocumentType);
 
-                var fileName = $"{model.DocumentType}_{model.File.FileName}_{model.ResidentId}{Path.GetExtension(model.File.FileName)}";
+                var fileName =
+                    $"{model.DocumentType}_{model.File.FileName}_{model.ResidentId}{Path.GetExtension(model.File.FileName)}";
                 var folder = Path.Combine(_env.WebRootPath, "uploads", "social");
                 Directory.CreateDirectory(folder);
                 var path = Path.Combine(folder, fileName);
@@ -129,6 +137,61 @@ namespace NursingHome.UI.Services
                     _context.SocialDocuments.Add(doc);
                 }
 
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
+
+        public async Task<bool> UploadWeeklyMenu(IFormFile file, ClaimsPrincipal user)
+        {
+            try
+            {
+                var uploader = await _userManager.GetUserAsync(user);
+
+                var today = DateTime.Today;
+                var startOfWeek = today.GetMondayOfCurrentWeek();
+                var endOfWeek = today.GetSundayOfCurrentWeek();
+
+                var folder = Path.Combine(_env.WebRootPath, "uploads", "weeklymenus");
+                Directory.CreateDirectory(folder);
+
+                var originalName = Path.GetFileNameWithoutExtension(file.FileName); 
+
+                var extension = Path.GetExtension(file.FileName);
+                var fileName = $"WeeklyMenu_{startOfWeek:yyyyMMdd}_{originalName}{extension}";
+                var filePath = Path.Combine(folder, fileName);
+
+                var existing = await _weeklyMenuService.GetWeeklyMenu(startOfWeek, endOfWeek);
+
+                if (existing != null)
+                {
+                    File.Delete(Path.Combine(folder, existing.FileName));
+                    _context.WeeklyMenus.Remove(existing);
+                }
+
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var menu = new WeeklyMenu
+                {
+                    FileName = fileName,
+                    FilePath = $"/uploads/weeklymenus/{fileName}",
+                    ContentType = file.ContentType,
+                    UploadedOn = DateTime.UtcNow,
+                    StartOfWeek = startOfWeek,
+                    EndOfWeek = endOfWeek,
+                    UploadedById = uploader!.Id
+                };
+
+                _context.WeeklyMenus.Add(menu);
                 await _context.SaveChangesAsync();
 
                 return true;
