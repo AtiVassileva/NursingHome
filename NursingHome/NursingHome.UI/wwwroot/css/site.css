@@ -35,6 +35,14 @@ footer {
     width: 100%;
 }
 
+.login-page-container {
+    width: 100%;
+    height: 80vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(/img/home.jpeg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 .home-container {
     width: 100%;
     height: 80vh;
@@ -46,6 +54,14 @@ footer {
 
 .action-icon {
     margin-right: 10px;
+}
+
+.white-text {
+    color: #fff;
+}
+
+.font-size-12 {
+    font-size: 12px;
 }
 
 .btn-info {

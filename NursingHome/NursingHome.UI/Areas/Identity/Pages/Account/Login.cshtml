@@ -1,0 +1,44 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<div class="mt-1 row login-page-container">
+    <div class="col-md-12 d-flex justify-content-center align-content-center">
+        <section class="d-flex justify-content-center align-items-center">
+            <form id="account" method="post">
+                <h2 class="white-text">Влизане в профила</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="checkbox mb-3">
+                    <label asp-for="Input.RememberMe" class="form-label white-text">
+                        <input class="form-check-input" asp-for="Input.RememberMe" />
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    </label>
+                </div>
+                <div>
+                    <p class="white-text font-size-12">При забравена парола, моля обърнете се към системния администратор!</p>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-darkBlue">Вход</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

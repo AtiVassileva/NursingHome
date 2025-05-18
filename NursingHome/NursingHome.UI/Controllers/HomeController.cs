@@ -6,7 +6,15 @@ namespace NursingHome.UI.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+
+            return LocalRedirect("/Identity/Account/Login");
+        }
 
         public IActionResult Contacts() => View();
 

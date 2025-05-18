@@ -21,6 +21,12 @@ namespace NursingHome.BLL
                 r.UploadedOn.Month == month &&
                 r.UploadedOn.Year == year);
 
+        public async Task<List<Report>> GetAll()
+            => await _dbContext.Reports
+                .Include(r => r.UploadedBy)
+                .OrderByDescending(r => r.UploadedOn)
+                .ToListAsync();
+
         public async Task<List<Report>> GetOccupationalTherapistsReports()
             => await _dbContext.Reports
                 .Include(r => r.UploadedBy)

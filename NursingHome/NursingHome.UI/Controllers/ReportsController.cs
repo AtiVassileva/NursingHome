@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NursingHome.BLL;
+using NursingHome.DAL.Models;
 using NursingHome.UI.Infrastructure;
 using NursingHome.UI.Services;
 using static NursingHome.DAL.Common.ModelConstants;
@@ -48,9 +49,20 @@ public class ReportsController : Controller
     [HttpGet]
     public async Task<IActionResult> List()
     {
-        var reports = User.IsOccupationalTherapist()
-            ? await _reportService.GetOccupationalTherapistsReports()
-            : await _reportService.GetPsychologistsReports();
+        List<Report> reports = new List<Report>();
+
+        if (User.IsOccupationalTherapist())
+        {
+            reports = await _reportService.GetOccupationalTherapistsReports();
+        }
+        else if (User.IsPsychologist())
+        {
+            reports = await _reportService.GetPsychologistsReports();
+        }
+        else if (User.IsAdmin())
+        {
+            reports = await _reportService.GetAll();
+        }
 
         return View(reports);
     }
