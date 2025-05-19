@@ -171,9 +171,10 @@ namespace NursingHome.UI.Services
                 var folder = Path.Combine(_env.WebRootPath, "uploads", "weeklymenus");
                 Directory.CreateDirectory(folder);
 
-                var originalName = Path.GetFileNameWithoutExtension(file.FileName); 
+                var isWordFile = Path.GetExtension(file.FileName).ToLower() is ".doc" or ".docx";
+                var extension = isWordFile ? ".pdf" : Path.GetExtension(file.FileName).ToLower();
 
-                var extension = Path.GetExtension(file.FileName);
+                var originalName = Path.GetFileNameWithoutExtension(file.FileName);
                 var fileName = $"WeeklyMenu_{startOfWeek:yyyyMMdd}_{originalName}{extension}";
                 var filePath = Path.Combine(folder, fileName);
 
@@ -185,8 +186,20 @@ namespace NursingHome.UI.Services
                     _context.WeeklyMenus.Remove(existing);
                 }
 
-                await using (var stream = new FileStream(filePath, FileMode.Create))
+                if (isWordFile)
                 {
+                    await using var stream = file.OpenReadStream();
+                    using var wordDocument = new WordDocument(stream, Syncfusion.DocIO.FormatType.Automatic);
+                    using var renderer = new DocIORenderer();
+                    using var pdfDocument = renderer.ConvertToPDF(wordDocument);
+
+                    await using var pdfStream = new FileStream(filePath, FileMode.Create);
+                    pdfDocument.Save(pdfStream);
+                    pdfDocument.Close();
+                }
+                else
+                {
+                    await using var stream = new FileStream(filePath, FileMode.Create);
                     await file.CopyToAsync(stream);
                 }
 
