@@ -18,14 +18,15 @@ namespace NursingHome.UI.Infrastructure
         public static void RegisterServicesCollection(this WebApplicationBuilder builder)
         {
             builder.Services
-                .AddTransient<UserService>()
                 .AddTransient<UserUiService>()
+                .AddTransient<FileUiService>()
+                .AddTransient<FeeBookUiService>()
+                .AddTransient<UserService>()
                 .AddTransient<ResidentInfoService>()
                 .AddTransient<EmployeeInfoService>()
                 .AddTransient<MonthlyParameterService>()
                 .AddTransient<MonthlyFeeService>()
                 .AddTransient<FeeBookPdfGenerator>()
-                .AddTransient<FeeBookUiService>()
                 .AddTransient<PaymentService>()
                 .AddTransient<MedicalRecordService>()
                 .AddTransient<SocialDocumentService>()
@@ -33,7 +34,7 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<WeeklyMenuService>()
                 .AddTransient<MessageService>()
                 .AddTransient<WorkScheduleService>()
-                .AddTransient<FileUiService>()
+                .AddTransient<RegulatoryDocumentService>()
                 .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }
 

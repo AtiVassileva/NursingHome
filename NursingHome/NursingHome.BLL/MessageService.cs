@@ -24,17 +24,10 @@ namespace NursingHome.BLL
             .OrderByDescending(m => m.CreatedOn)
             .ToListAsync();
 
-        public async Task<List<Message>> GetMessagesForStaff()
-            => await _dbContext.Messages
-                .Include(m => m.Sender)
-                .Where(m => m.Audience == MessageAudience.Staff)
-                .OrderByDescending(m => m.CreatedOn)
-                .ToListAsync();
-
         public async Task<List<Message>> GetMessagesForResidents()
             => await _dbContext.Messages
                 .Include(m => m.Sender)
-                .Where(m => m.Audience == MessageAudience.Users)
+                .Where(m => m.Audience == MessageAudience.Users || m.Audience == MessageAudience.Both)
                 .OrderByDescending(m => m.CreatedOn)
                 .ToListAsync();
 

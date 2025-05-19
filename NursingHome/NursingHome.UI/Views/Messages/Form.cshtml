@@ -16,6 +16,17 @@
         <textarea asp-for="Content" class="form-control" rows="5"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
+    
+    <div class="mb-3">
+        <label asp-for="Audience" class="form-label"></label>
+        <select asp-for="Audience" class="form-select">
+            @foreach (MessageAudience audience in Enum.GetValues(typeof(MessageAudience)))
+            {
+                <option value="@audience">@audience.GetDisplayName()</option>
+            }
+        </select>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
 
     <div class="mb-3">
         @if (Model.Action == "Edit" && Model?.AttachmentFilePath != null)

@@ -1,5 +1,7 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NursingHome.BLL
+@inject MonthlyParameterService MonthlyParameterService
 
 @model FeeBookViewModel
 
@@ -7,6 +9,9 @@
     ViewData["Title"] = "Таксова книга";
     var bulgarianCulture = new CultureInfo("bg-BG");
     var textInfo = bulgarianCulture.TextInfo;
+
+    var monthlyParams = await MonthlyParameterService.GetMonthlyParametersByMonth(Model.SelectedMonth, Model.SelectedYear);
+    var monthlyParamsAvailable = monthlyParams != null;
 }
 
 <h2 class="mb-4">Таксова книга</h2>
@@ -28,45 +33,55 @@
         <input asp-for="@Model.SelectedYear" class="form-control" id="Year" />
         <span asp-validation-for="@Model.SelectedYear" class="text-danger"></span>
     </div>
-    <div class="col-md-4" style="display: flex; align-items: flex-end;">
-        <a asp-action="ExportFeeBookPdf" class="btn btn-darkBlue" target="_blank" style="height: fit-content">
-            Експортирай в PDF
-        </a>
-    </div>
+    @if (monthlyParamsAvailable)
+    {
+        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+            <a asp-action="ExportFeeBookPdf" class="btn btn-darkBlue" target="_blank" style="height: fit-content">
+                Експортирай в PDF
+            </a>
+        </div>
+    }
 </div>
 
-<table class="table table-bordered table-striped mt-4 fee-book-table">
-    <thead>
-    <tr>
-        <th>Три имена</th>
-        <th>Брой присъствени дни</th>
-        <th>Размер на действителни месечни разходи /РИ/</th>
-        <th>Пенсия</th>
-        <th>Наем</th>
-        <th>Заплата</th>
-        <th>Рента</th>
-        <th>Общ доход</th>
-        <th>Процент в зависимост от вида на СИ</th>
-        <th>Размер на дължимата сума</th>
-        <th>Изключения от таксата</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var row in Model.Rows)
-    {
+@if (!monthlyParamsAvailable)
+{
+    <p>Моля въведете месечни параметри преди да пристъпите към генериране на таксова книга!</p>
+}
+else
+{
+    <table class="table table-bordered table-striped mt-4 fee-book-table">
+        <thead>
         <tr>
-            <td>@row.FullName</td>
-            <td>@row.PresentDays</td>
-            <td>@row.RealCost.ToString("F2")</td>
-            <td>@row.Pension.ToString("F2")</td>
-            <td>@row.Rent.ToString("F2")</td>
-            <td>@row.Salary.ToString("F2")</td>
-            <td>@row.OtherIncome.ToString("F2")</td>
-            <td>@row.TotalIncome.ToString("F2")</td>
-            <td>@row.PercentageType</td>
-            <td>@row.FeeCalculated.ToString("F2")</td>
-            <td>@row.HasFeeException</td>
+            <th>Три имена</th>
+            <th>Брой присъствени дни</th>
+            <th>Размер на действителни месечни разходи /РИ/</th>
+            <th>Пенсия</th>
+            <th>Наем</th>
+            <th>Заплата</th>
+            <th>Рента</th>
+            <th>Общ доход</th>
+            <th>Процент в зависимост от вида на СИ</th>
+            <th>Размер на дължимата сума</th>
+            <th>Изключения от таксата</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var row in Model.Rows)
+        {
+            <tr>
+                <td>@row.FullName</td>
+                <td>@row.PresentDays</td>
+                <td>@row.RealCost.ToString("F2")</td>
+                <td>@row.Pension.ToString("F2")</td>
+                <td>@row.Rent.ToString("F2")</td>
+                <td>@row.Salary.ToString("F2")</td>
+                <td>@row.OtherIncome.ToString("F2")</td>
+                <td>@row.TotalIncome.ToString("F2")</td>
+                <td>@row.PercentageType</td>
+                <td>@row.FeeCalculated.ToString("F2")</td>
+                <td>@row.HasFeeException</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -27,7 +27,7 @@ main {
 }
 
 footer {
-    position: relative !important;
+    position: static !important;
 }
 
 .container-fluid {

@@ -1,11 +1,16 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NursingHome.BLL
 @model PaymentViewModel
+@inject MonthlyParameterService MonthlyParameterService
 
 @{
     ViewData["Title"] = "Плащания";
     var bulgarianCulture = new CultureInfo("bg-BG");
     var textInfo = bulgarianCulture.TextInfo;
+
+    var monthlyParams = await MonthlyParameterService.GetMonthlyParametersByMonth(Model.SelectedMonth, Model.SelectedYear);
+    var monthlyParamsAvailable = monthlyParams != null;
 }
 
 <h2 class="mb-4">Плащания</h2>
@@ -27,40 +32,51 @@
         <input asp-for="@Model.SelectedYear" class="form-control" id="Year" />
         <span asp-validation-for="@Model.SelectedYear" class="text-danger"></span>
     </div>
-    <div class="col-md-4" style="display: flex; align-items: flex-end;">
-        <p class="font-weight-bold text-dark margin-right-20">Общо платена сума: @Model.Payments.Where(p => p.Status == PaymentStatus.Paid).Sum(p => p.FeeAmount) лв.</p>  
-        <br/>
-        <p class="font-weight-bold text-danger">Общо дължима сума: @Model.Payments.Where(p => p.Status == PaymentStatus.Unpaid).Sum(p => p.FeeAmount) лв.</p>
-    </div>
+    @if (monthlyParamsAvailable)
+    {
+        <div class="col-md-4" style="display: flex; align-items: flex-end;">
+            <p class="font-weight-bold text-dark margin-right-20">Общо платена сума: @Model.Payments.Where(p => p.Status == PaymentStatus.Paid).Sum(p => p.FeeAmount) лв.</p>  
+            <br/>
+            <p class="font-weight-bold text-danger">Общо дължима сума: @Model.Payments.Where(p => p.Status == PaymentStatus.Unpaid).Sum(p => p.FeeAmount) лв.</p>
+        </div>
+    }
 </div>
 
-<table class="table table-bordered table-striped mt-4">
-    <thead>
-    <tr>
-        <th>Три имена</th>
-        <th class="text-center">Такса</th>
-        <th class="text-center">Статус</th>
-        <th class="text-center">Действия</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var row in Model.Payments)
-    {
+@if (!monthlyParamsAvailable)
+{
+    <p>Моля въведете месечни параметри преди да пристъпите към плащане!</p>
+}
+else
+{
+
+    <table class="table table-bordered table-striped mt-4">
+        <thead>
         <tr>
-            <td>@row.ResidentName</td>
-            <td class="text-center">@row.FeeAmount.ToString("F2") лв</td>
-            <td class="text-center">@row.Status.GetDisplayName()</td>
-            <td class="text-center">
-                @if (row.Status == PaymentStatus.Unpaid)
-                {
-                    <a asp-controller="Payments" asp-action="MarkAsPaid" asp-route-id="@row.PaymentId" class="btn btn-success">Маркирай като платено</a>
-                }
-                else
-                {
-                    <a asp-controller="Payments" asp-action="MarkAsUnpaid" asp-route-id="@row.PaymentId" class="btn btn-danger">Маркирай като неплатено</a>
-                }
-            </td>
+            <th>Три имена</th>
+            <th class="text-center">Такса</th>
+            <th class="text-center">Статус</th>
+            <th class="text-center">Действия</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var row in Model.Payments)
+        {
+            <tr>
+                <td>@row.ResidentName</td>
+                <td class="text-center">@row.FeeAmount.ToString("F2") лв</td>
+                <td class="text-center">@row.Status.GetDisplayName()</td>
+                <td class="text-center">
+                    @if (row.Status == PaymentStatus.Unpaid)
+                    {
+                        <a asp-controller="Payments" asp-action="MarkAsPaid" asp-route-id="@row.PaymentId" class="btn btn-success">Маркирай като платено</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Payments" asp-action="MarkAsUnpaid" asp-route-id="@row.PaymentId" class="btn btn-danger">Маркирай като неплатено</a>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

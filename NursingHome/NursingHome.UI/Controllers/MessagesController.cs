@@ -22,7 +22,7 @@ namespace NursingHome.UI.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Create() => View("Form");
+        public IActionResult Create() => View("Form", new MessageCreateViewModel());
 
         public async Task<IActionResult> Edit(Guid id)
         {

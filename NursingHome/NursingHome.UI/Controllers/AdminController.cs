@@ -13,34 +13,36 @@ namespace NursingHome.UI.Controllers
     public class AdminController : Controller
     {
         private readonly UserUiService _userUiService;
-        private readonly MonthlyParameterService _monthlyParameterService;
         private readonly IMapper _mapper;
 
-        public AdminController(UserUiService userUiService, IMapper mapper, MonthlyParameterService monthlyParameterService)
+        public AdminController(UserUiService userUiService, IMapper mapper)
         {
             _userUiService = userUiService;
             _mapper = mapper;
-            _monthlyParameterService = monthlyParameterService;
         }
 
+        [HttpGet]
         public async Task<IActionResult> EmployeeAccounts()
         {
             var employees = await _userUiService.GetEmployees();
             return View(employees.ToList());
         }
-        
+
+        [HttpGet]
         public async Task<IActionResult> ResidentsAccounts()
         {
             var residents = await _userUiService.GetActiveResidents();
             return View(residents);
         }
-        
+
+        [HttpGet]
         public async Task<IActionResult> GoToArchive()
         {
             var inactiveResidents = await _userUiService.GetInactiveResidents();
             return View("ResidentsArchive", inactiveResidents);
         }
 
+        [HttpGet]
         public async Task<IActionResult> EditUser(string userId)
         {
             var user = await _userUiService.GetById(userId);
@@ -116,38 +118,6 @@ namespace NursingHome.UI.Controllers
                 ? RedirectToAction(nameof(ResidentsAccounts)) 
                 : RedirectToAction(nameof(EmployeeAccounts));
         }
-
-        [HttpGet]
-        public async Task<IActionResult> MonthlyParameters()
-        {
-            var model = await _monthlyParameterService.GetMonthlyParametersByMonth(DateTime.Now.Month, DateTime.Now.Year)
-                        ??
-                        MonthlyParameter.CreateInstance(DateTime.Now.Year, DateTime.Now.Month);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveMonthlyParameters(MonthlyParameter model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("MonthlyParameters", model);
-            }
-
-            var isSaveSuccessful = await _monthlyParameterService.SaveMonthlyParameters(model);
-
-            if (!isSaveSuccessful)
-            {
-                return BadRequest();
-            }
-
-            TempData["Success"] = "Месечните параметри са запазени успешно!";
-            return RedirectToAction("MonthlyParameters");
-        }
-
-
 
         private async Task FetchAvailableEmployees(ResidentEditModel residentEditModel)
         {

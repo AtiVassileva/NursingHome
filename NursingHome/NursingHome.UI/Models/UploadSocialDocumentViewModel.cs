@@ -6,7 +6,7 @@ namespace NursingHome.UI.Models
 {
     public class UploadSocialDocumentViewModel
     {
-        [Required] 
+        [Required(ErrorMessage = "Моля, изберете потребител!")] 
         public string ResidentId { get; set; } = null!;
 
         [Required]

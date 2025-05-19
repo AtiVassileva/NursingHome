@@ -416,6 +416,38 @@ namespace NursingHome.DAL.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("NursingHome.DAL.Models.RegulatoryDocument", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploadedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UploadedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UploadedById");
+
+                    b.ToTable("RegulatoryDocuments");
+                });
+
             modelBuilder.Entity("NursingHome.DAL.Models.Report", b =>
                 {
                     b.Property<Guid>("Id")
@@ -787,6 +819,17 @@ namespace NursingHome.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("MonthlyFee");
+                });
+
+            modelBuilder.Entity("NursingHome.DAL.Models.RegulatoryDocument", b =>
+                {
+                    b.HasOne("NursingHome.DAL.Models.ApplicationUser", "UploadedBy")
+                        .WithMany()
+                        .HasForeignKey("UploadedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("UploadedBy");
                 });
 
             modelBuilder.Entity("NursingHome.DAL.Models.Report", b =>

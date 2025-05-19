@@ -27,6 +27,7 @@ namespace NursingHome.DAL
         public DbSet<WeeklyMenu> WeeklyMenus { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<WorkSchedule> WorkSchedules { get; set; } = null!;
+        public DbSet<RegulatoryDocument> RegulatoryDocuments { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -129,6 +130,12 @@ namespace NursingHome.DAL
                 .HasOne(m => m.Sender)
                 .WithMany()
                 .HasForeignKey(m => m.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RegulatoryDocument>()
+                .HasOne(d => d.UploadedBy)
+                .WithMany()
+                .HasForeignKey(d => d.UploadedById)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

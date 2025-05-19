@@ -366,5 +366,42 @@ namespace NursingHome.UI.Services
                 return false;
             }
         }
+
+        public async Task<bool> UploadRegulatoryDocument(ClaimsPrincipal user, RegulatoryDocumentViewModel model)
+        {
+            try
+            {
+                var uploader = await _userManager.GetUserAsync(user);
+                var folder = Path.Combine(_env.WebRootPath, "uploads", "regulations");
+                Directory.CreateDirectory(folder);
+
+                var fileName = $"{DateTime.UtcNow:yyyyMMddHHmmss}_{model.File.FileName}";
+                var filePath = Path.Combine(folder, fileName);
+
+                await using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.File.CopyToAsync(stream);
+                }
+
+                var doc = new RegulatoryDocument
+                {
+                    Title = model.Title,
+                    FileName = fileName,
+                    FilePath = $"/uploads/regulations/{fileName}",
+                    UploadedOn = DateTime.UtcNow,
+                    UploadedById = uploader!.Id
+                };
+
+                _context.RegulatoryDocuments.Add(doc);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
     }
 }

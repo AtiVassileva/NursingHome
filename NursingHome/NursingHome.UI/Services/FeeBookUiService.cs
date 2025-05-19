@@ -20,9 +20,6 @@ namespace NursingHome.UI.Services
 
         public async Task<FeeBookViewModel> CreateFeeBookViewModel()
         {
-            var monthlyParams = await _monthlyParameterService.GetMonthlyParametersByMonth(DateTime.Now.Month,
-                DateTime.Now.Year);
-
             var users = await _userUiService.GetActiveResidents();
             var feeRows = new List<FeeBookRowViewModel>();
 

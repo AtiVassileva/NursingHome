@@ -1,0 +1,74 @@
+﻿@model MonthlyParameter
+
+@{
+    ViewData["Title"] = "Mесечни параметри";
+    var bulgarianCulture = new System.Globalization.CultureInfo("bg-BG");
+    var textInfo = bulgarianCulture.TextInfo;
+}
+
+<h2 class="mb-4">Mесечни параметри</h2>
+
+<form method="post" asp-action="SaveMonthlyParameters" class="mb-3" novalidate>
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label asp-for="Month" class="form-label">Месец</label>
+            <select asp-for="Month" class="form-select" required>
+                @for (var m = 1; m <= 12; m++)
+                {
+                    var monthName = textInfo.ToTitleCase(bulgarianCulture.DateTimeFormat.GetMonthName(m));
+                    <option value="@m">@monthName</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="Year" class="form-label">Година</label>
+            <input asp-for="Year" class="form-control" required />
+        </div>
+    </div>
+
+    <h4 class="mt-3">Цени за престой (по видове стаи)</h4>
+    <table class="table table-bordered table-striped mt-2">
+        <thead class="table-light">
+        <tr>
+            <th>Тип стая</th>
+            <th>Цена за месец (лв)</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (int i = 0; i < Model.StayRates.Count; i++)
+        {
+            <tr>
+                <td>@Model.StayRates[i].RoomType.GetDisplayName()</td>
+                <td>
+                    <input type="hidden" asp-for="@Model.StayRates[i].RoomType" />
+                    <input id=@($"stayRate_{i}") asp-for="@Model.StayRates[i].MonthlyRate" class="form-control" />
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <h4 class="mt-3">Цени за храна (по видове диети)</h4>
+    <table class="table table-bordered table-striped mt-2">
+        <thead class="table-light">
+            <tr>
+                <th>Тип диета</th>
+                <th>Цена за месец (лв)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.DietRates.Count; i++)
+            {
+                <tr>
+                    <td>@Model.DietRates[i].DietNumber.GetDisplayName()</td>
+                    <td>
+                        <input type="hidden" asp-for="@Model.DietRates[i].DietNumber" />
+                        <input id=@($"dietRate_{i}") asp-for="@Model.DietRates[i].MonthlyRate" class="form-control" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-success mt-3">Запазване на параметрите</button>
+</form>

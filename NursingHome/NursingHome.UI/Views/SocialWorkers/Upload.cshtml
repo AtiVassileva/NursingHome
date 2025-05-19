@@ -9,7 +9,6 @@
     <div class="mb-3">
         <label asp-for="ResidentId" class="form-label">Потребител</label>
         <select asp-for="ResidentId" class="form-select" asp-items="Model.Residents" id="userSelectDocuments">
-            <option value="">-- Избери потребител --</option>
         </select>
         <span asp-validation-for="ResidentId" class="text-danger"></span>
     </div>
@@ -26,7 +25,7 @@
 
     <div class="mb-3">
         <label asp-for="File" class="form-label">Файл</label>
-        <input asp-for="File" type="file" class="form-control" />
+        <input asp-for="File" type="file" class="form-control" required/>
     </div>
 
     <button type="submit" class="btn btn-darkBlue">Качи</button>

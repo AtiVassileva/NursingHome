@@ -1,56 +1,68 @@
-﻿@model MonthlyFeeViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NursingHome.BLL
+@model MonthlyFeeViewModel
+@inject MonthlyParameterService MonthlyParameterService
 
 @{
     ViewData["Title"] = "Mесечна такса";
     var bulgarianCulture = new System.Globalization.CultureInfo("bg-BG");
     var textInfo = bulgarianCulture.TextInfo;
+    var monthlyParams = await MonthlyParameterService.GetMonthlyParametersByMonth(Model.Month, Model.Year);
+    var monthlyParamsAvailable = monthlyParams != null;
 }
 
 <h2 class="mb-4">Mесечни такси</h2>
 
-<form asp-action="Calculate" method="post">
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <label asp-for="@Model.SelectedUserId" class="form-label"></label>
-            <select asp-for="@Model.SelectedUserId" asp-items="Model.AllUsers" class="form-select" id="userSelect" onchange="loadUserFee()"></select>
+@if (!monthlyParamsAvailable)
+{
+    <p>Моля въведете месечни параметри преди да пристъпите към месечни такси!</p>
+}
+else
+{
+    <form asp-action="Calculate" method="post">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label asp-for="@Model.SelectedUserId" class="form-label"></label>
+                <select asp-for="@Model.SelectedUserId" asp-items="Model.AllUsers" class="form-select" id="userSelect" onchange="loadUserFee()"></select>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="@Model.Month" class="form-label"></label>
+                <select asp-for="@Model.Month" class="form-select" id="Month">
+                    @for (var i = 1; i <= 12; i++)
+                    {
+                        var monthName = textInfo.ToTitleCase(bulgarianCulture.DateTimeFormat.GetMonthName(i));
+                        <option value="@i">@monthName</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.Month" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="@Model.Year" class="form-label"></label>
+                <input asp-for="@Model.Year" class="form-control" id="Year"/>
+                <span asp-validation-for="@Model.Year" class="text-danger"></span>
+            </div>
         </div>
-        <div class="col-md-4">
-            <label asp-for="@Model.Month" class="form-label"></label>
-            <select asp-for="@Model.Month" class="form-select" id="Month">
-                @for (var i = 1; i <= 12; i++)
-                {
-                    var monthName = textInfo.ToTitleCase(bulgarianCulture.DateTimeFormat.GetMonthName(i));
-                    <option value="@i">@monthName</option>
-                }
-            </select>
-            <span asp-validation-for="@Model.Month" class="text-danger"></span>
+
+        <div class="mb-3">
+            <label asp-for="@Model.PresentDays" class="form-label"></label>
+            <input asp-for="@Model.PresentDays" class="form-control" id="PresentDays"/>
+            <span asp-validation-for="@Model.PresentDays" class="text-danger"></span>
         </div>
-        <div class="col-md-4">
-            <label asp-for="@Model.Year" class="form-label"></label>
-            <input asp-for="@Model.Year" class="form-control" id="Year" />
-            <span asp-validation-for="@Model.Year" class="text-danger"></span>
+
+        <div class="mb-3">
+            <label asp-for="@Model.RealCost" class="form-label"></label>
+            <input asp-for="@Model.RealCost" class="form-control" id="RealCost" readonly/>
         </div>
-    </div>
 
-    <div class="mb-3">
-        <label asp-for="@Model.PresentDays" class="form-label"></label>
-        <input asp-for="@Model.PresentDays" class="form-control" id="PresentDays" />
-        <span asp-validation-for="@Model.PresentDays" class="text-danger"></span>
-    </div>
+        <div class="mb-3">
+            <label asp-for="@Model.FeeAmount" class="form-label"></label>
+            <input asp-for="@Model.FeeAmount" class="form-control" id="FeeAmount" readonly/>
+        </div>
 
-    <div class="mb-3">
-        <label asp-for="@Model.RealCost" class="form-label"></label>
-        <input asp-for="@Model.RealCost" class="form-control" id="RealCost" readonly />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="@Model.FeeAmount" class="form-label"></label>
-        <input asp-for="@Model.FeeAmount" class="form-control" id="FeeAmount" readonly />
-    </div>
-
-    <button id="calculateBtn" type="submit" class="btn btn-primary btn-darkBlue"></button>
-    <a asp-controller="Fee" asp-action="GenerateFeeBook" class="btn btn-warning">Генерирай таксова книга</a>
-</form>
+        <button id="calculateBtn" type="submit" class="btn btn-primary btn-darkBlue"></button>
+        <a asp-controller="Fee" asp-action="GenerateFeeBook" class="btn btn-warning">Генерирай таксова книга</a>
+    </form>
+}
 
 @section Scripts {
     <script>
