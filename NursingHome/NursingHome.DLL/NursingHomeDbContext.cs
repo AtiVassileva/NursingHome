@@ -26,6 +26,7 @@ namespace NursingHome.DAL
         public DbSet<SocialDocument> SocialDocuments { get; set; } = null!;
         public DbSet<WeeklyMenu> WeeklyMenus { get; set; } = null!;
         public DbSet<Message> Messages { get; set; } = null!;
+        public DbSet<WorkSchedule> WorkSchedules { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

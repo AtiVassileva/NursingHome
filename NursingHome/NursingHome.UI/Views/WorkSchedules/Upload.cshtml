@@ -1,0 +1,22 @@
+﻿@model EmployeePosition
+
+<h3>Качване на работен график</h3>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="position" class="form-label">Длъжност</label>
+        <select name="position" class="form-select">
+            @foreach (EmployeePosition pos in Enum.GetValues(typeof(EmployeePosition)))
+            {
+                <option value="@pos">@pos.GetDisplayName()</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Файл</label>
+        <input type="file" name="file" class="form-control" required="Моля, качете файл!"/>
+    </div>
+
+    <button type="submit" class="btn btn-darkBlue">Качи</button>
+</form>

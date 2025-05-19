@@ -1,0 +1,33 @@
+﻿@model WorkSchedule
+@using System.Globalization
+
+
+<div class="d-flex justify-content-center align-items-center mb-3 mt-1">
+    <h3 class="margin-right-20">Работен график - @Model?.EmployeePosition.GetDisplayName()</h3>
+    @if (User.IsAdmin())
+    {
+        <a class="btn btn-darkBlue d-flex align-items-center justify-content-center" style="height: fit-content" asp-controller="WorkSchedules" asp-action="Upload">Качи график</a>
+    }
+</div>
+
+<div class="d-flex flex-wrap gap-4">
+
+    <div class="card shadow-sm" style="width: 100%;">
+        <div class="card-body">
+            @if (Model is null)
+            {
+                <p>Няма качен график.</p>
+            }
+            else
+            {
+                <p class="text-muted">
+                    Качен на: @Model.UploadedOn.ToLocalTime().ToString("dd.MM.yyyy HH:mm", new CultureInfo("bg-BG"))
+                </p>
+
+                <div class="d-flex justify-content-center">
+                    <iframe src="@Model.FilePath?version=@DateTime.Now.Ticks" width="100%" height="800px" style="border: none;"></iframe>
+                </div>
+            }
+        </div>
+    </div>
+</div>

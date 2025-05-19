@@ -16,6 +16,18 @@
             <a class="nav-link text-white" asp-controller="WeeklyMenus" asp-action="Index">Меню</a>
         </li>
 
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="dropdownMenu" role="button" style="color: #ffffff">
+                Графици
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                @foreach(EmployeePosition pos in Enum.GetValues(typeof(EmployeePosition)))
+                    {
+                        <a class="nav-link text-white" asp-controller="WorkSchedules" asp-action="Index" asp-route-position="@pos" style="color: #000 !      important">График @pos.GetDisplayName()</a>
+                    }
+            </div>
+        </li>
+
         @if (User.IsAdmin() || User.IsInRole(EmployeeRoleName))
         {
             <li class="nav-item">
