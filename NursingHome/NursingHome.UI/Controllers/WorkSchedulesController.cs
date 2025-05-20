@@ -36,12 +36,12 @@ namespace NursingHome.UI.Controllers
                 return View();
             }
             
-            var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png" };
+            var allowedExtensions = new[] { ".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png", ".xls" };
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
             if (!allowedExtensions.Contains(extension))
             {
-                ModelState.AddModelError("", "Непозволен файлов формат. Разрешени: PDF, DOC, DOCX, JPG, JPEG, PNG.");
+                ModelState.AddModelError("", "Непозволен файлов формат. Разрешени: PDF, DOC, DOCX, JPG, JPEG, PNG, XLS.");
                 return View();
             }
 

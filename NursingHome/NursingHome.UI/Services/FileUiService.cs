@@ -6,13 +6,10 @@ using NursingHome.BLL;
 using NursingHome.UI.Models;
 using static NursingHome.DAL.Common.ModelConstants;
 using NursingHome.UI.Infrastructure;
-using static NuGet.Packaging.PackagingConstants;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocIORenderer;
-using Syncfusion.Pdf;
-using Syncfusion.Pdf.Graphics;
+using Syncfusion.ExcelToPdfConverter;
+using Syncfusion.XlsIO;
 
 namespace NursingHome.UI.Services
 {
@@ -26,10 +23,11 @@ namespace NursingHome.UI.Services
         private readonly WeeklyMenuService _weeklyMenuService;
         private readonly MessageService _messageService;
         private readonly WorkScheduleService _workScheduleService;
+        private readonly RoomPlanService _roomPlanService;
 
         public FileUiService(NursingHomeDbContext context, IWebHostEnvironment env,
             UserManager<ApplicationUser> userManager, ReportService reportService,
-            SocialDocumentService socialDocumentService, WeeklyMenuService weeklyMenuService, MessageService messageService, WorkScheduleService workScheduleService)
+            SocialDocumentService socialDocumentService, WeeklyMenuService weeklyMenuService, MessageService messageService, WorkScheduleService workScheduleService, RoomPlanService roomPlanService)
         {
             _context = context;
             _env = env;
@@ -39,6 +37,7 @@ namespace NursingHome.UI.Services
             _weeklyMenuService = weeklyMenuService;
             _messageService = messageService;
             _workScheduleService = workScheduleService;
+            _roomPlanService = roomPlanService;
         }
 
         public async Task<bool> UploadReport(IFormFile file, ReportType type, ClaimsPrincipal user)
@@ -188,14 +187,7 @@ namespace NursingHome.UI.Services
 
                 if (isWordFile)
                 {
-                    await using var stream = file.OpenReadStream();
-                    using var wordDocument = new WordDocument(stream, Syncfusion.DocIO.FormatType.Automatic);
-                    using var renderer = new DocIORenderer();
-                    using var pdfDocument = renderer.ConvertToPDF(wordDocument);
-
-                    await using var pdfStream = new FileStream(filePath, FileMode.Create);
-                    pdfDocument.Save(pdfStream);
-                    pdfDocument.Close();
+                    await ConvertWordToPdfAsync(file, filePath);
                 }
                 else
                 {
@@ -311,7 +303,8 @@ namespace NursingHome.UI.Services
                 Directory.CreateDirectory(folder);
 
                 var isWordFile = Path.GetExtension(file.FileName).ToLower() is ".doc" or ".docx";
-                var extension = isWordFile ? ".pdf" : Path.GetExtension(file.FileName).ToLower();
+                var isExcelFile = Path.GetExtension(file.FileName).ToLower() is ".xls" or ".xlsx";
+                var extension = isWordFile || isExcelFile ? ".pdf" : Path.GetExtension(file.FileName).ToLower();
 
                 var fileName = $"{position}_WorkSchedule{extension}";
                 var filePath = Path.Combine(folder, fileName);
@@ -342,14 +335,11 @@ namespace NursingHome.UI.Services
                 
                 if (isWordFile)
                 {
-                    await using var stream = file.OpenReadStream();
-                    using var wordDocument = new WordDocument(stream, Syncfusion.DocIO.FormatType.Automatic);
-                    using var renderer = new DocIORenderer();
-                    using var pdfDocument = renderer.ConvertToPDF(wordDocument);
-
-                    await using var pdfStream = new FileStream(filePath, FileMode.Create);
-                    pdfDocument.Save(pdfStream);
-                    pdfDocument.Close();
+                    await ConvertWordToPdfAsync(file, filePath);
+                }
+                else if (isExcelFile)
+                {
+                    await ConvertExcelToPdfAsync(file, filePath);
                 }
                 else
                 {
@@ -402,6 +392,99 @@ namespace NursingHome.UI.Services
                 Console.WriteLine(e.Message);
                 return false;
             }
+        }
+
+        public async Task<bool> UploadRoomPlan(ClaimsPrincipal user, IFormFile file)
+        {
+            try
+            {
+                var uploader = await _userManager.GetUserAsync(user);
+
+                var folder = Path.Combine(_env.WebRootPath, "uploads", "roomplans");
+                Directory.CreateDirectory(folder);
+
+                var isWordFile = Path.GetExtension(file.FileName).ToLower() is ".doc" or ".docx";
+                var extension = isWordFile ? ".pdf" : Path.GetExtension(file.FileName).ToLower();
+
+                var fileName = $"RoomPlan_{DateTime.UtcNow:yyyyMMddHHmmss}.pdf";
+                var filePath = Path.Combine(folder, fileName);
+                
+                var existing = await _roomPlanService.GetLatest();
+
+                if (existing != null)
+                {
+                    var oldFilePath = Path.Combine(_env.WebRootPath, existing.FilePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+                    if (File.Exists(oldFilePath))
+                    {
+                        File.Delete(oldFilePath);
+                    }
+
+                    _context.RoomPlans.Remove(existing);
+                }
+                
+                if (isWordFile)
+                {
+                    await ConvertWordToPdfAsync(file, filePath);
+                }
+                else
+                {
+                    fileName = $"RoomPlan_{DateTime.UtcNow:yyyyMMddHHmmss}{extension}";
+                    filePath = Path.Combine(folder, fileName);
+
+                    await using var stream = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                }
+
+                var newPlan = new RoomPlan
+                {
+                    FileName = fileName,
+                    FilePath = $"/uploads/roomplans/{fileName}",
+                    UploadedOn = DateTime.UtcNow,
+                    UploadedById = uploader!.Id
+                };
+
+                _context.RoomPlans.Add(newPlan);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        private static async Task ConvertWordToPdfAsync(IFormFile file, string filePath)
+        {
+            await using var stream = file.OpenReadStream();
+            using var wordDocument = new WordDocument(stream, Syncfusion.DocIO.FormatType.Automatic);
+            using var renderer = new DocIORenderer();
+            using var pdfDocument = renderer.ConvertToPDF(wordDocument);
+
+            await using var pdfStream = new FileStream(filePath, FileMode.Create);
+            pdfDocument.Save(pdfStream);
+            pdfDocument.Close();
+        }
+
+        private static async Task ConvertExcelToPdfAsync(IFormFile file, string filePath)
+        {
+            await using var stream = file.OpenReadStream();
+
+            using var excelEngine = new ExcelEngine();
+            var application = excelEngine.Excel;
+            application.DefaultVersion = ExcelVersion.Excel2016;
+            
+            var workbook = application.Workbooks.Open(stream);
+            
+            using var renderer = new ExcelToPdfConverter(workbook);
+            var pdfDoc = renderer.Convert();
+            
+            await using var pdfStream = new FileStream(filePath, FileMode.Create);
+            pdfDoc.Save(pdfStream);
+
+            pdfDoc.Close(true);
+            workbook.Close();
         }
     }
 }

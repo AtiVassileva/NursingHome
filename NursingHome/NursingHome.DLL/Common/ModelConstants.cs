@@ -87,16 +87,16 @@ namespace NursingHome.DAL.Common
         public enum SocialDocumentType
         {
             [Display(Name = "Индивидуална оценка на потребностите от подкрепа /ИОП/")]
-            IOP,
+            IOP = 1,
 
             [Display(Name = "Индивидуален план за подкрепа /ИПП/")]
-            IPP,
+            IPP = 2,
 
             [Display(Name = "Договор за ползване на социални услуги")]
-            Contract,
+            Contract = 3,
 
-            [Display(Name = "Декларация за личните данни")]
-            GdprDeclaration
+            [Display(Name = "Протокол за прием")]
+            AcceptanceProtocol = 4
         }
 
         public enum MessageAudience

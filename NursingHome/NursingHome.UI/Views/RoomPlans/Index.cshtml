@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using NursingHome.DAL
+@using static NursingHome.UI.Common.WebConstants
+
+@model RoomPlan?
+
+<h3 class="text-center">Актуална схема на разпределение</h3>
+
+@if (User.IsInRole(EmployeeRoleName) || User.IsAdmin())
+{
+    <h5 class="mt-2">Качване на нова схема</h5>
+    <form asp-action="Upload" method="post" enctype="multipart/form-data" class="mb-3">
+        <input type="file" name="file" class="form-control" required/>
+        <button type="submit" class="btn btn-darkBlue mt-1">Качи</button>
+    </form>
+}
+
+@if (Model != null)
+{
+    <div class="d-flex justify-content-center">
+        <iframe src="@Model.FilePath?version=@DateTime.Now.Ticks" width="100%" height="800px" style="border: none;"></iframe>
+    </div>
+}
+else
+{
+    <p>Няма налична схема.</p>
+}

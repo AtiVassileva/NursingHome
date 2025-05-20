@@ -28,6 +28,7 @@ namespace NursingHome.DAL
         public DbSet<Message> Messages { get; set; } = null!;
         public DbSet<WorkSchedule> WorkSchedules { get; set; } = null!;
         public DbSet<RegulatoryDocument> RegulatoryDocuments { get; set; } = null!;
+        public DbSet<RoomPlan> RoomPlans { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -136,6 +137,12 @@ namespace NursingHome.DAL
                 .HasOne(d => d.UploadedBy)
                 .WithMany()
                 .HasForeignKey(d => d.UploadedById)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<RoomPlan>()
+                .HasOne(r => r.UploadedBy)
+                .WithMany()
+                .HasForeignKey(r => r.UploadedById)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

@@ -35,6 +35,7 @@ namespace NursingHome.UI.Infrastructure
                 .AddTransient<MessageService>()
                 .AddTransient<WorkScheduleService>()
                 .AddTransient<RegulatoryDocumentService>()
+                .AddTransient<RoomPlanService>()
                 .AddScoped<IClaimsTransformation, PositionClaimsTransformer>();
         }
 

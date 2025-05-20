@@ -37,6 +37,7 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 QuestPDF.Settings.License = LicenseType.Community;
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["SyncfusionLicenseKey"]);
 
 builder.RegisterServicesCollection();
 

@@ -704,6 +704,34 @@ namespace NursingHome.DAL.Migrations
                     b.ToTable("WorkSchedules");
                 });
 
+            modelBuilder.Entity("NursingHome.DAL.RoomPlan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploadedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("UploadedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UploadedById");
+
+                    b.ToTable("RoomPlans");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -893,6 +921,17 @@ namespace NursingHome.DAL.Migrations
                 });
 
             modelBuilder.Entity("NursingHome.DAL.Models.WeeklyMenu", b =>
+                {
+                    b.HasOne("NursingHome.DAL.Models.ApplicationUser", "UploadedBy")
+                        .WithMany()
+                        .HasForeignKey("UploadedById")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("UploadedBy");
+                });
+
+            modelBuilder.Entity("NursingHome.DAL.RoomPlan", b =>
                 {
                     b.HasOne("NursingHome.DAL.Models.ApplicationUser", "UploadedBy")
                         .WithMany()

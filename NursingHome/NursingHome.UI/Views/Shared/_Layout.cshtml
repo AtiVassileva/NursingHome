@@ -15,11 +15,14 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark darkBlue-bg">
             <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center">
-                <div class="col-2 d-flex justify-content-start">
-                    <img src="~/img/lenta.png" alt="Logo" style="width: 180% !important;" class="me-2" />
+                <div class="col-1 d-flex justify-content-start">
+                    @if (!User.IsAdmin())
+                    {
+                        <img src="~/img/lenta.png" alt="Logo" style="width: 400% !important;" class="me-2" />
+                    }
                 </div>
 
-                <div class="col-10 d-flex flex-wrap justify-content-end align-items-center gap-3 mt-2 mt-lg-0">
+                <div class="col-11 d-flex flex-wrap justify-content-end align-items-center gap-2 mt-2 mt-lg-0">
                     <partial name="_LoginPartial" />
                 </div>
             </div>
