@@ -64,7 +64,7 @@ namespace NursingHome.DAL.Common
             SocialWorker = 4,
             [Display(Name = "Работник кухня")]
             Cook = 5,
-            [Display(Name = "Медицинска сестра")]
+            [Display(Name = "Медицинско лице")]
             Nurse = 6
         }
 

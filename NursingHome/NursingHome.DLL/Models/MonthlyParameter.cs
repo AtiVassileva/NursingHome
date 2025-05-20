@@ -27,9 +27,11 @@ namespace NursingHome.DAL.Models
                 Year = year,
                 Month = month,
                 StayRates = Enum.GetValues<RoomType>()
+                    .OrderBy(e => e)
                     .Select(rt => new StayRate {RoomType = rt})
                     .ToList(),
                 DietRates = Enum.GetValues<DietNumber>()
+                    .OrderBy(d => d)
                     .Select(dt => new DietRate {DietNumber = dt})
                     .ToList()
             };

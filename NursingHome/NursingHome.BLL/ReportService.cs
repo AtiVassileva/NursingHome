@@ -40,5 +40,12 @@ namespace NursingHome.BLL
                 .Where(r => r.UploadedBy!.EmployeeInfo!.EmployeePosition == EmployeePosition.Psychologist)
                 .OrderByDescending(r => r.UploadedOn)
                 .ToListAsync();
+
+        public async Task<List<Report>> GetNursesReports()
+            => await _dbContext.Reports
+                .Include(r => r.UploadedBy)
+                .Where(r => r.UploadedBy!.EmployeeInfo!.EmployeePosition == EmployeePosition.Nurse)
+                .OrderByDescending(r => r.UploadedOn)
+                .ToListAsync();
     }
 }

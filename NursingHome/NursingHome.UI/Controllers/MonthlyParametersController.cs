@@ -19,7 +19,7 @@ namespace NursingHome.UI.Controllers
             var model = await _monthlyParameterService.GetMonthlyParametersByMonth(DateTime.Now.Month, DateTime.Now.Year)
                         ??
                         MonthlyParameter.CreateInstance(DateTime.Now.Year, DateTime.Now.Month);
-
+            
             return View(model);
         }
 

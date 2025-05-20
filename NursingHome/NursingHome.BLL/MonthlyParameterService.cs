@@ -20,6 +20,12 @@ namespace NursingHome.BLL
                 .Include(m => m.StayRates)
                 .FirstOrDefaultAsync(mp => mp.Month == month && mp.Year == year);
 
+            if (monthlyParameters is not null)
+            {
+                monthlyParameters.StayRates = monthlyParameters.StayRates.OrderBy(s => s.RoomType).ToList();
+                monthlyParameters.DietRates = monthlyParameters.DietRates.OrderBy(d => d.DietNumber).ToList();
+            }
+
             return monthlyParameters;
         }
 

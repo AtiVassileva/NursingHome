@@ -49,7 +49,7 @@ public class ReportsController : Controller
     [HttpGet]
     public async Task<IActionResult> List()
     {
-        List<Report> reports = new List<Report>();
+        var reports = new List<Report>();
 
         if (User.IsOccupationalTherapist())
         {
@@ -58,6 +58,10 @@ public class ReportsController : Controller
         else if (User.IsPsychologist())
         {
             reports = await _reportService.GetPsychologistsReports();
+        }
+        else if (User.IsNurse())
+        {
+            reports = await _reportService.GetNursesReports();
         }
         else if (User.IsAdmin())
         {
